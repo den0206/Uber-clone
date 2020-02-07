@@ -39,13 +39,10 @@ class LoginViewController: UIViewController {
         return UITextField().textField(withPlaceholder: "Password", isSecureTextEntry: true)
     }()
     
-    private let loginButton : UIButton = {
-        let button = UIButton(type: .system)
+    private let loginButton : AuthButton = {
+        let button = AuthButton(type: .system)
         button.setTitle("Login", for: .normal)
-        button.setTitleColor(UIColor(white: 1, alpha: 0.5), for: .normal)
-        button.backgroundColor = .mainBlueTint
-        button.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+     
         return button
     }()
     
@@ -57,15 +54,17 @@ class LoginViewController: UIViewController {
         
         
         button.setAttributedTitle(attributedTitle, for: .normal)
+        button.addTarget(self, action: #selector(handleShowSignup), for: .touchUpInside)
         return button
     }()
+    
+    //MARK: Life Cycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = UIColor.backGroundColor
-        
         setupUI()
+        configureNavagationBar()
         
     }
     
@@ -76,6 +75,9 @@ class LoginViewController: UIViewController {
     }
     
     private func setupUI() {
+        
+        view.backgroundColor = UIColor.backGroundColor
+        
         view.addSubview(titleLabel)
         titleLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor)
         titleLabel.centerX(InView: view)
@@ -94,6 +96,20 @@ class LoginViewController: UIViewController {
         dontHaveAccountButton.anchor(bottom : view.safeAreaLayoutGuide.bottomAnchor, height:  12)
         
     }
+    
+    private func configureNavagationBar() {
+        navigationController?.navigationBar.isHidden = true
+        navigationController?.navigationBar.barStyle = .black
+    }
+    
+    //MARK: Handlers
+    
+    @objc func handleShowSignup() {
+        let controller = SignupController()
+        navigationController?.pushViewController(controller, animated: true)
+    }
+    
+    
 
 }
 
