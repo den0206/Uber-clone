@@ -11,6 +11,7 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
+    private(set) static var shared: SceneDelegate?
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -18,7 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = scene as? UIWindowScene else { return }
         window = UIWindow(windowScene: scene)
         window?.makeKeyAndVisible()
-        window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+        window?.rootViewController = UINavigationController(rootViewController: HomeController())
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

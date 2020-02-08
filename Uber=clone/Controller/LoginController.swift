@@ -115,7 +115,11 @@ class LoginViewController: UIViewController {
                 print(error!.localizedDescription)
                 return
             }
-            print("Log in!")
+            
+            guard let controller = SceneDelegate.shared?.window?.rootViewController as? HomeController else { return }
+            
+            controller.configureUI()
+            self.dismiss(animated: true, completion: nil)
         }
     }
     

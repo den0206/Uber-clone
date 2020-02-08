@@ -156,7 +156,15 @@ class SignupController: UIViewController {
                           kACCOUNTTYPE : accountTypeIndex ] as [String : Any]
             
             // set fireStore
-            firebaseReferences(.User).document(uid).setData(values)
+            firebaseReferences(.User).document(uid).setData(values) { (error) in
+                if error != nil {
+                    print(error!.localizedDescription)
+                }
+                
+                guard let contrroller = UIApplication.shared.keyWindow?.rootViewController as? HomeController else {return}
+                contrroller.configureUI()
+                self.dismiss(animated: true, completion: nil)
+            }
         }
         
     }
