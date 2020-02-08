@@ -10,6 +10,8 @@
 		1C4B095A68A956134B69E325 /* Pods_Uber_clone.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8161FD089A431FAAEC6CC17D /* Pods_Uber_clone.framework */; };
 		3A5A7ECF23ED82DB007A0A90 /* SignupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5A7ECE23ED82DB007A0A90 /* SignupController.swift */; };
 		3A5A7ED123ED8EEE007A0A90 /* AuthButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5A7ED023ED8EEE007A0A90 /* AuthButton.swift */; };
+		3AAA403423EEEBF5003A1F9B /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AAA403323EEEBF5003A1F9B /* Service.swift */; };
+		3AAA403623EEF290003A1F9B /* FUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AAA403523EEF290003A1F9B /* FUser.swift */; };
 		3AC29B9D23ED946300C5CB06 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3AC29B9C23ED946300C5CB06 /* GoogleService-Info.plist */; };
 		3AD4E7A823EE608900FF496D /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD4E7A723EE608900FF496D /* HomeController.swift */; };
 		3AD836E323EE40AE00BB9505 /* Reference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD836E223EE40AE00BB9505 /* Reference.swift */; };
@@ -29,6 +31,8 @@
 /* Begin PBXFileReference section */
 		3A5A7ECE23ED82DB007A0A90 /* SignupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupController.swift; sourceTree = "<group>"; };
 		3A5A7ED023ED8EEE007A0A90 /* AuthButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthButton.swift; sourceTree = "<group>"; };
+		3AAA403323EEEBF5003A1F9B /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
+		3AAA403523EEF290003A1F9B /* FUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FUser.swift; sourceTree = "<group>"; };
 		3AC29B9C23ED946300C5CB06 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3AD4E7A723EE608900FF496D /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
 		3AD836E223EE40AE00BB9505 /* Reference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reference.swift; sourceTree = "<group>"; };
@@ -127,6 +131,7 @@
 		3AF99BD323EC357800BBDF38 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				3AAA403523EEF290003A1F9B /* FUser.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -155,6 +160,7 @@
 		3AF99BD623EC35C300BBDF38 /* Service */ = {
 			isa = PBXGroup;
 			children = (
+				3AAA403323EEEBF5003A1F9B /* Service.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -286,7 +292,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				3AF1A5CA23EE7FDA00D06F51 /* LocationInputActivationView.swift in Sources */,
+				3AAA403423EEEBF5003A1F9B /* Service.swift in Sources */,
 				3AF99BC023EC355800BBDF38 /* AppDelegate.swift in Sources */,
+				3AAA403623EEF290003A1F9B /* FUser.swift in Sources */,
 				3A5A7ED123ED8EEE007A0A90 /* AuthButton.swift in Sources */,
 				3AD836E323EE40AE00BB9505 /* Reference.swift in Sources */,
 				3AF99BD923EC364C00BBDF38 /* LoginController.swift in Sources */,

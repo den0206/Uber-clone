@@ -16,6 +16,8 @@ class LocationInputView: UIView {
     
     weak var delegate : LocationInputViewDelegate?
     
+   
+    
     let backButton : UIButton = {
         let button = UIButton(type: .system)
         button.setImage(#imageLiteral(resourceName: "baseline_arrow_back_black_36dp").withRenderingMode(.alwaysOriginal), for: .normal)
@@ -23,9 +25,8 @@ class LocationInputView: UIView {
         return button
     }()
     
-    private let titleLabel : UILabel = {
+    let titleLabel : UILabel = {
         let label = UILabel()
-        label.text = "aaa"
         label.textColor = .darkGray
         label.font = UIFont.systemFont(ofSize: 16)
         

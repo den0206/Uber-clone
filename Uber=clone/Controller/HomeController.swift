@@ -32,6 +32,7 @@ class HomeController : UIViewController {
         // check Login
         checkUserIsLogin()
         enableLocationaService()
+        fetchUserData()
       
         
         
@@ -54,6 +55,12 @@ class HomeController : UIViewController {
         } else {
             configureUI()
         } 
+    }
+    
+    func fetchUserData() {
+        Service.shared.fetchCurrentUserData { (user) in
+            self.locationInputView.titleLabel.text = user.fullname
+        }
     }
     
     private func signOut() {
