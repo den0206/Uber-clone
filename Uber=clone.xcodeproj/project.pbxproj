@@ -16,7 +16,7 @@
 		3AD836E523EE43A100BB9505 /* Constracts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD836E423EE43A100BB9505 /* Constracts.swift */; };
 		3AF1A5CA23EE7FDA00D06F51 /* LocationInputActivationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF1A5C923EE7FDA00D06F51 /* LocationInputActivationView.swift */; };
 		3AF1A5CC23EE87C000D06F51 /* LocationInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF1A5CB23EE87C000D06F51 /* LocationInputView.swift */; };
-		3AF1A5CE23EE981200D06F51 /* LocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF1A5CD23EE981200D06F51 /* LocationCell.swift */; };
+		3AF1A5D123EEA32500D06F51 /* LocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF1A5D023EEA32500D06F51 /* LocationCell.swift */; };
 		3AF99BC023EC355800BBDF38 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF99BBF23EC355800BBDF38 /* AppDelegate.swift */; };
 		3AF99BC223EC355800BBDF38 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF99BC123EC355800BBDF38 /* SceneDelegate.swift */; };
 		3AF99BC723EC355800BBDF38 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3AF99BC523EC355800BBDF38 /* Main.storyboard */; };
@@ -35,7 +35,7 @@
 		3AD836E423EE43A100BB9505 /* Constracts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constracts.swift; sourceTree = "<group>"; };
 		3AF1A5C923EE7FDA00D06F51 /* LocationInputActivationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInputActivationView.swift; sourceTree = "<group>"; };
 		3AF1A5CB23EE87C000D06F51 /* LocationInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInputView.swift; sourceTree = "<group>"; };
-		3AF1A5CD23EE981200D06F51 /* LocationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationCell.swift; sourceTree = "<group>"; };
+		3AF1A5D023EEA32500D06F51 /* LocationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LocationCell.swift; path = "Uber=clone/View/LocationCell.swift"; sourceTree = SOURCE_ROOT; };
 		3AF99BBC23EC355800BBDF38 /* Uber=clone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Uber=clone.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3AF99BBF23EC355800BBDF38 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3AF99BC123EC355800BBDF38 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -82,7 +82,7 @@
 		3AF1A5CF23EE98FD00D06F51 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
-				3AF1A5CD23EE981200D06F51 /* LocationCell.swift */,
+				3AF1A5D023EEA32500D06F51 /* LocationCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -290,8 +290,8 @@
 				3A5A7ED123ED8EEE007A0A90 /* AuthButton.swift in Sources */,
 				3AD836E323EE40AE00BB9505 /* Reference.swift in Sources */,
 				3AF99BD923EC364C00BBDF38 /* LoginController.swift in Sources */,
+				3AF1A5D123EEA32500D06F51 /* LocationCell.swift in Sources */,
 				3AF99BC223EC355800BBDF38 /* SceneDelegate.swift in Sources */,
-				3AF1A5CE23EE981200D06F51 /* LocationCell.swift in Sources */,
 				3AD4E7A823EE608900FF496D /* HomeController.swift in Sources */,
 				3A5A7ECF23ED82DB007A0A90 /* SignupController.swift in Sources */,
 				3AF99BDB23EC3AA900BBDF38 /* Extensions.swift in Sources */,
