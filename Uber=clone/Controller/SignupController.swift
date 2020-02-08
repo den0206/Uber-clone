@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class SignupController: UIViewController {
     
@@ -27,6 +28,7 @@ class SignupController: UIViewController {
     
     private let emailTextField : UITextField = {
         return UITextField().textField(withPlaceholder: "Email", isSecureTextEntry: false)
+       
     }()
     
     private lazy var fullnameContainerView : UIView = {
@@ -36,7 +38,9 @@ class SignupController: UIViewController {
     }()
     
     private let fullnameTextField : UITextField = {
-        return UITextField().textField(withPlaceholder: "Fullname", isSecureTextEntry: false)
+        let tf = UITextField().textField(withPlaceholder: "Fullname", isSecureTextEntry: false)
+        tf.autocapitalizationType = .sentences
+        return tf
     }()
     
     private lazy var passwordContainerView : UIView = {
@@ -47,6 +51,7 @@ class SignupController: UIViewController {
     
     private let passwordTextField : UITextField = {
         return UITextField().textField(withPlaceholder: "Password", isSecureTextEntry: true)
+        
     }()
     
     private lazy var accountTypeContainerView : UIView = {
@@ -67,6 +72,7 @@ class SignupController: UIViewController {
     private let signUpButton : AuthButton = {
         let button = AuthButton(type: .system)
         button.setTitle("SignUp", for: .normal)
+        button.addTarget(self, action: #selector(handlSignUp), for: .touchUpInside)
         return button
     }()
     
@@ -125,6 +131,35 @@ class SignupController: UIViewController {
     }
     
     //MARK: Handler
+    
+    @objc func handlSignUp() {
+        
+        guard let email = emailTextField.text else {return}
+        guard let password = passwordTextField.text else {return}
+        guard let fullname = fullnameTextField.text else {return}
+        let accountTypeIndex = accountTypeSegmentControl.selectedSegmentIndex
+        print(accountTypeIndex)
+        
+        Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
+            
+            if error != nil {
+                print(error!.localizedDescription)
+                return
+            }
+            
+            // no error
+            guard let uid = result?.user.uid else {return}
+            
+            let values = [kUSERID : uid,
+                          kEMAIL : email,
+                          kFULLNAME : fullname,
+                          kACCOUNTTYPE : accountTypeIndex ] as [String : Any]
+            
+            // set fireStore
+            firebaseReferences(.User).document(uid).setData(values)
+        }
+        
+    }
     
     @objc func handleShowLogin() {
         navigationController?.popViewController(animated: true)

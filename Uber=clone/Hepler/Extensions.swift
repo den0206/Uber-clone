@@ -110,6 +110,7 @@ extension UITextField {
         tf.keyboardAppearance = .dark
         tf.isSecureTextEntry = isSecureTextEntry
         tf.attributedPlaceholder = NSAttributedString(string: withPlaceholder, attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
+        tf.autocapitalizationType = .none
         
         return tf
     }
