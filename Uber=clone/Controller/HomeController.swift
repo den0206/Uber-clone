@@ -322,6 +322,10 @@ extension HomeController : UITableViewDelegate, UITableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: reuserIdentifier, for: indexPath) as! LocationCell
         
+        if indexPath.section == 1 {
+            cell.placeMark = searchRersults[indexPath.row]
+        }
+        
         return cell
     }
     
@@ -331,6 +335,18 @@ extension HomeController : UITableViewDelegate, UITableViewDataSource {
         
         // blank not nil
         return "   "
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectedPlaceMark = searchRersults[indexPath.row]
+        
+       handleBackBUttonTapped()
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = selectedPlaceMark.coordinate
+        self.mapview.addAnnotation(annotation)
+        
+        // Zoom Annotation
+        mapview.selectAnnotation(annotation, animated: true)
+        
     }
     
     
