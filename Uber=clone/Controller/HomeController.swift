@@ -11,6 +11,7 @@ import Firebase
 import MapKit
 
 private let reuserIdentifier = "LocationCell"
+private let annotationIdentifer = "DriverAnnotation"
 
 class HomeController : UIViewController {
     
@@ -34,9 +35,10 @@ class HomeController : UIViewController {
         checkUserIsLogin()
         enableLocationaService()
         fetchUserData()
+        fetchDrivers()
         
-
-      
+        
+        
         
         
     }
@@ -61,8 +63,20 @@ class HomeController : UIViewController {
     }
     
     func fetchUserData() {
-        Service.shared.fetchCurrentUserData { (user) in
+        guard let currentid = Auth.auth().currentUser?.uid else {return}
+        Service.shared.fetchUserData(uid: currentid) { (user) in
             self.locationInputView.titleLabel.text = user.fullname
+        }
+    }
+    func fetchDrivers() {
+        guard let location = locationManager?.location else {return}
+        Service.shared.fetchDrivers(location: location) { (driver) in
+            // 座標
+            guard let coodinate = driver.location?.coordinate else {return}
+            let driverAnnotation = DriverAnnotation(_uid: driver.uid, _coodinate: coodinate)
+            print("ああ\(driverAnnotation.coordinate)")
+            // add Annotation
+            self.mapview.addAnnotation(driverAnnotation)
         }
     }
     
@@ -114,19 +128,33 @@ class HomeController : UIViewController {
         // User Location
         mapview.showsUserLocation = true
         mapview.userTrackingMode = .follow
+        mapview.delegate = self
     }
     
-   
+    
     
     
 }
 
 //MARK: Location Service
 
+extension HomeController : MKMapViewDelegate {
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if let annotation = annotation as? DriverAnnotation {
+            let view = MKAnnotationView(annotation: annotation, reuseIdentifier: annotationIdentifer)
+            view.image = #imageLiteral(resourceName: "chevron-sign-to-right")
+            return view
+        }
+        
+        return nil
+    }
+}
+
 extension HomeController {
     
     func enableLocationaService() {
-       
+        
         switch CLLocationManager.authorizationStatus() {
         case .notDetermined:
             locationManager?.requestWhenInUseAuthorization()
@@ -143,7 +171,7 @@ extension HomeController {
         }
     }
     
-   
+    
 }
 
 //MARK: Activation VIew Delegate
@@ -154,7 +182,7 @@ extension HomeController : LocationInputActivationViewDelegate {
         inputActivationView.alpha = 0
         configureLocationInputView()
     }
- 
+    
 }
 
 //MARK: InputVIew Delegate
@@ -172,25 +200,25 @@ extension HomeController : LocationInputViewDelegate {
     }
     
     func configureLocationInputView() {
-           
-           // inputVIew
-           view.addSubview(locationInputView)
-           locationInputView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, height: locationInputViewHeight)
-           locationInputView.alpha = 0
-           locationInputView.delegate = self
-           
-           UIView.animate(withDuration: 0.5, animations: {
-               self.locationInputView.alpha = 1
-           }) { (_) in
+        
+        // inputVIew
+        view.addSubview(locationInputView)
+        locationInputView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, height: locationInputViewHeight)
+        locationInputView.alpha = 0
+        locationInputView.delegate = self
+        
+        UIView.animate(withDuration: 0.5, animations: {
+            self.locationInputView.alpha = 1
+        }) { (_) in
             
             UIView.animate(withDuration: 0.5) {
                 
                 // 始点
                 self.tableView.frame.origin.y = self.locationInputViewHeight
             }
-           }
-           
-       }
+        }
+        
+    }
     
     
 }
@@ -225,7 +253,7 @@ extension HomeController : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-//        return section == 0 ? 2 : 5
+        //        return section == 0 ? 2 : 5
         
         if section == 0 {
             return 2
@@ -251,7 +279,7 @@ extension HomeController : UITableViewDelegate, UITableViewDataSource {
         return "   "
     }
     
-   
+    
     
     
     

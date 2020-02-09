@@ -14,6 +14,7 @@
 		3AAA403423EEEBF5003A1F9B /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AAA403323EEEBF5003A1F9B /* Service.swift */; };
 		3AAA403623EEF290003A1F9B /* FUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AAA403523EEF290003A1F9B /* FUser.swift */; };
 		3AC29B9D23ED946300C5CB06 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3AC29B9C23ED946300C5CB06 /* GoogleService-Info.plist */; };
+		3ACB83AE23EFB7BA00ECCCAC /* DriverAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACB83AD23EFB7BA00ECCCAC /* DriverAnnotation.swift */; };
 		3AD4E7A823EE608900FF496D /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD4E7A723EE608900FF496D /* HomeController.swift */; };
 		3AD836E323EE40AE00BB9505 /* Reference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD836E223EE40AE00BB9505 /* Reference.swift */; };
 		3AD836E523EE43A100BB9505 /* Constracts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD836E423EE43A100BB9505 /* Constracts.swift */; };
@@ -36,6 +37,7 @@
 		3AAA403323EEEBF5003A1F9B /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		3AAA403523EEF290003A1F9B /* FUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FUser.swift; sourceTree = "<group>"; };
 		3AC29B9C23ED946300C5CB06 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		3ACB83AD23EFB7BA00ECCCAC /* DriverAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverAnnotation.swift; sourceTree = "<group>"; };
 		3AD4E7A723EE608900FF496D /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
 		3AD836E223EE40AE00BB9505 /* Reference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reference.swift; sourceTree = "<group>"; };
 		3AD836E423EE43A100BB9505 /* Constracts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constracts.swift; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 			isa = PBXGroup;
 			children = (
 				3AAA403523EEF290003A1F9B /* FUser.swift */,
+				3ACB83AD23EFB7BA00ECCCAC /* DriverAnnotation.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -302,6 +305,7 @@
 				3A5A7ED123ED8EEE007A0A90 /* AuthButton.swift in Sources */,
 				3AD836E323EE40AE00BB9505 /* Reference.swift in Sources */,
 				3AF99BD923EC364C00BBDF38 /* LoginController.swift in Sources */,
+				3ACB83AE23EFB7BA00ECCCAC /* DriverAnnotation.swift in Sources */,
 				3AF1A5D123EEA32500D06F51 /* LocationCell.swift in Sources */,
 				3AF99BC223EC355800BBDF38 /* SceneDelegate.swift in Sources */,
 				3AD4E7A823EE608900FF496D /* HomeController.swift in Sources */,

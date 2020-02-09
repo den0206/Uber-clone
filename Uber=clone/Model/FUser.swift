@@ -7,14 +7,17 @@
 //
 
 import Foundation
+import CoreLocation
 
 struct FUser {
     let fullname : String
     let email : String
     let accountType : Int
+    var location : CLLocation?
+    let uid : String
     
-    init(dictionary : [String : Any]) {
-        
+    init(_uid : String , dictionary : [String : Any]) {
+        self.uid = _uid
         self.fullname = dictionary[kFULLNAME] as? String ?? ""
         self.email = dictionary[kEMAIL] as? String ?? ""
         

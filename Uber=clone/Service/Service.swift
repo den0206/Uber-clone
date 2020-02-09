@@ -8,6 +8,8 @@
 
 
 import Firebase
+import CoreLocation
+import Geofirestore
 
 class Service {
     
@@ -16,18 +18,39 @@ class Service {
     
     //MARK: Get current User
     
-    func fetchCurrentUserData(completion : @escaping(FUser) -> Void){
-        guard let currentId = Auth.auth().currentUser?.uid else {return}
+    func fetchUserData(uid : String, completion : @escaping(FUser) -> Void){
+//        guard let currentId = Auth.auth().currentUser?.uid else {return}
         
-        firebaseReferences(.User).document(currentId).getDocument { (snapshot, error) in
+        firebaseReferences(.User).document(uid).getDocument { (snapshot, error) in
             guard let snapshot = snapshot else {return}
             
             if snapshot.exists {
                 guard let dictionary = snapshot.data() as? [String : Any] else {return}
-                let user = FUser(dictionary: dictionary)
-                
+                let userId = snapshot.documentID
+                let user = FUser(_uid: userId, dictionary: dictionary)
                 completion(user)
                 
+            }
+        }
+    }
+    
+    
+    
+    func fetchDrivers(location : CLLocation , completion : @escaping(FUser) -> Void) {
+        let geoFire = GeoFirestore(collectionRef: firebaseReferences(.Driver_Location))
+        
+        firebaseReferences(.Driver_Location).getDocuments { (snapshot, error) in
+            
+            
+            guard let snapshot = snapshot else {return}
+            geoFire.query(withCenter: location, radius: 1000).observe(.documentEntered) { (uid, location) in
+                if let uid = uid, let location = location {
+                    self.fetchUserData(uid: uid) { (user) in
+                        var driver = user
+                        driver.location = location
+                        completion(driver)
+                    }
+                }
             }
         }
     }
