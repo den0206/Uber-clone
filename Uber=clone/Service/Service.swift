@@ -12,13 +12,14 @@ import Firebase
 class Service {
     
     static let shared = Service()
-    let currentId = Auth.auth().currentUser?.uid
+   
     
     //MARK: Get current User
     
     func fetchCurrentUserData(completion : @escaping(FUser) -> Void){
+        guard let currentId = Auth.auth().currentUser?.uid else {return}
         
-        firebaseReferences(.User).document(currentId!).getDocument { (snapshot, error) in
+        firebaseReferences(.User).document(currentId).getDocument { (snapshot, error) in
             guard let snapshot = snapshot else {return}
             
             if snapshot.exists {

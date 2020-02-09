@@ -15,7 +15,7 @@ private let reuserIdentifier = "LocationCell"
 class HomeController : UIViewController {
     
     private let mapview = MKMapView()
-    private let locationmanager = CLLocationManager()
+    private let locationManager = LocationHandler.shared.locationManager
     
     private let inputActivationView = LocationInputActivationView()
     private let locationInputView = LocationInputView()
@@ -28,11 +28,14 @@ class HomeController : UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
         navigationController?.navigationBar.isHidden = true
         // check Login
         checkUserIsLogin()
         enableLocationaService()
         fetchUserData()
+        
+
       
         
         
@@ -53,7 +56,7 @@ class HomeController : UIViewController {
                 self.present(nav, animated: true, completion: nil)
             }
         } else {
-            configureUI()
+            configureUI() 
         } 
     }
     
@@ -66,6 +69,15 @@ class HomeController : UIViewController {
     private func signOut() {
         do {
             try Auth.auth().signOut()
+            // aync
+            DispatchQueue.main.async {
+                let nav = UINavigationController(rootViewController: LoginViewController())
+                if #available(iOS 13.0, *) {
+                    nav.isModalInPresentation = true
+                }
+                nav.modalPresentationStyle = .fullScreen
+                self.present(nav, animated: true, completion: nil)
+            }
         } catch {
             print("can't Sign Out")
         }
@@ -111,34 +123,27 @@ class HomeController : UIViewController {
 
 //MARK: Location Service
 
-extension HomeController  : CLLocationManagerDelegate{
+extension HomeController {
     
     func enableLocationaService() {
-        
-        locationmanager.delegate = self
-        
+       
         switch CLLocationManager.authorizationStatus() {
         case .notDetermined:
-            locationmanager.requestWhenInUseAuthorization()
+            locationManager?.requestWhenInUseAuthorization()
         case .restricted , .denied:
-            break
+            locationManager?.requestWhenInUseAuthorization()
         case .authorizedAlways:
             print("Always")
-            locationmanager.startUpdatingLocation()
-            locationmanager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager?.startUpdatingLocation()
+            locationManager?.desiredAccuracy = kCLLocationAccuracyBest
         case .authorizedWhenInUse:
-            locationmanager.requestAlwaysAuthorization()
+            locationManager?.requestAlwaysAuthorization()
         @unknown default:
             break
         }
     }
     
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        
-        if status == .authorizedWhenInUse {
-            locationmanager.requestAlwaysAuthorization()
-        }
-    }
+   
 }
 
 //MARK: Activation VIew Delegate

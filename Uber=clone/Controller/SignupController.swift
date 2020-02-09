@@ -8,8 +8,11 @@
 
 import UIKit
 import Firebase
+import Geofirestore
 
 class SignupController: UIViewController {
+    
+    private var location = LocationHandler.shared.locationManager.location
     
    private let titleLabel : UILabel = {
        let label = UILabel()
@@ -96,6 +99,9 @@ class SignupController: UIViewController {
         configureNavifationBar()
         
         configureUI()
+        
+      
+        print(location)
     }
     
     private func configureUI() {
@@ -155,18 +161,37 @@ class SignupController: UIViewController {
                           kFULLNAME : fullname,
                           kACCOUNTTYPE : accountTypeIndex ] as [String : Any]
             
-            // set fireStore
-            firebaseReferences(.User).document(uid).setData(values) { (error) in
-                if error != nil {
-                    print(error!.localizedDescription)
-                }
+            // For Dreivers
+            
+            if accountTypeIndex == 1 {
+                let geofire = GeoFirestore(collectionRef: firebaseReferences(.Driver_Location))
+                guard let location = self.location else {
+                    print("Location無し")
+                    return}
                 
-                guard let contrroller = UIApplication.shared.keyWindow?.rootViewController as? HomeController else {return}
-                contrroller.configureUI()
-                self.dismiss(animated: true, completion: nil)
+                geofire.setLocation(location: location, forDocumentWithID: uid) { (error) in
+                    
+                    self.uploadUserData(uid: uid, values: values)
+                }
             }
+            
+            // set fireStore
+            self.uploadUserData(uid: uid, values: values)
+           
         }
         
+    }
+    
+    func uploadUserData(uid : String, values : [String : Any]) {
+        firebaseReferences(.User).document(uid).setData(values) { (error) in
+            if error != nil {
+                print(error!.localizedDescription)
+            }
+            
+            guard let contrroller = UIApplication.shared.keyWindow?.rootViewController as? HomeController else {return}
+            contrroller.configureUI()
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     
     @objc func handleShowLogin() {
