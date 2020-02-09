@@ -189,7 +189,7 @@ class SignupController: UIViewController {
             }
             
             guard let contrroller = UIApplication.shared.keyWindow?.rootViewController as? HomeController else {return}
-            contrroller.configureUI()
+            contrroller.configure()
             self.dismiss(animated: true, completion: nil)
         }
     }

@@ -9,11 +9,17 @@
 import MapKit
 
 class DriverAnnotation : NSObject, MKAnnotation {
-    var coordinate: CLLocationCoordinate2D
+    dynamic var coordinate: CLLocationCoordinate2D
     var uid : String
     
     init(_uid : String, _coodinate : CLLocationCoordinate2D) {
         self.uid = _uid
         self.coordinate = _coodinate
+    }
+    
+    func updateAnnotationPosition(withCoodinate coodinate : CLLocationCoordinate2D) {
+        UIView.animate(withDuration: 0.2) {
+            self.coordinate = coodinate
+        }
     }
 }

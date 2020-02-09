@@ -10,6 +10,7 @@ import UIKit
 
 protocol LocationInputViewDelegate : class {
     func handleBackBUttonTapped()
+    func executeSearch(query : String)
 }
 
 class LocationInputView: UIView {
@@ -73,6 +74,7 @@ class LocationInputView: UIView {
         tf.backgroundColor = .lightGray
         tf.returnKeyType = .search
         tf.font = UIFont.systemFont(ofSize: 14)
+        tf.delegate = self
         
         let paddingView = UIView()
         paddingView.setDimensions(height: 30, width: 8)
@@ -102,8 +104,10 @@ class LocationInputView: UIView {
         addSubview(startingLocationTextField)
         startingLocationTextField.anchor(top: backButton.bottomAnchor, left: leftAnchor, bottom: nil, right: rightAnchor, paddingTop: 4, paddingLeft: 40,  paddingRight: 40, height: 30)
         
+        
         addSubview(destinationLocationTextField)
         destinationLocationTextField.anchor(top: startingLocationTextField.bottomAnchor, left: leftAnchor, bottom: nil, right: rightAnchor, paddingTop: 12, paddingLeft: 40, paddingRight: 40, height: 30)
+        
         
         // .dot
         
@@ -138,4 +142,15 @@ class LocationInputView: UIView {
     
     
     
+}
+
+//MARK: UItextfield Delegate
+
+extension LocationInputView : UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        guard let query = textField.text else {return false}
+        delegate?.executeSearch(query: query)
+        textField.resignFirstResponder()
+        return true
+    }
 }

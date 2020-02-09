@@ -42,8 +42,18 @@ class Service {
         firebaseReferences(.Driver_Location).getDocuments { (snapshot, error) in
             
             
-            guard let snapshot = snapshot else {return}
+//            guard let snapshot = snapshot else {return}
             geoFire.query(withCenter: location, radius: 1000).observe(.documentEntered) { (uid, location) in
+                if let uid = uid, let location = location {
+                    self.fetchUserData(uid: uid) { (user) in
+                        var driver = user
+                        driver.location = location
+                        completion(driver)
+                    }
+                }
+            }
+            
+            geoFire.query(withCenter: location, radius: 1000).observe(.documentMoved) { (uid, location) in
                 if let uid = uid, let location = location {
                     self.fetchUserData(uid: uid) { (user) in
                         var driver = user

@@ -24,6 +24,8 @@ class HomeController : UIViewController {
     private let tableView = UITableView()
     private final let locationInputViewHeight : CGFloat = 200
     
+    private var searchRersults = [MKPlacemark]()
+    
     
     //MARK: Life Cycle
     override func viewDidLoad() {
@@ -34,12 +36,8 @@ class HomeController : UIViewController {
         // check Login
         checkUserIsLogin()
         enableLocationaService()
-        fetchUserData()
-        fetchDrivers()
-        
-        
-        
-        
+
+  
         
     }
     
@@ -58,7 +56,7 @@ class HomeController : UIViewController {
                 self.present(nav, animated: true, completion: nil)
             }
         } else {
-            configureUI() 
+            configure()
         } 
     }
     
@@ -74,9 +72,27 @@ class HomeController : UIViewController {
             // 座標
             guard let coodinate = driver.location?.coordinate else {return}
             let driverAnnotation = DriverAnnotation(_uid: driver.uid, _coodinate: coodinate)
-            print("ああ\(driverAnnotation.coordinate)")
-            // add Annotation
-            self.mapview.addAnnotation(driverAnnotation)
+           
+            var driverIsVisble : Bool {
+                
+                return self.mapview.annotations.contains { (annotation) -> Bool in
+                    guard let driverAnno = annotation as? DriverAnnotation else {return false}
+                    
+                    if driverAnno.uid == driver.uid {
+                        driverAnno.updateAnnotationPosition(withCoodinate: coodinate)
+                        return true
+                    }
+                     return false
+                }
+               
+            }
+            
+            if !driverIsVisble {
+                // add Annotation
+                self.mapview.addAnnotation(driverAnnotation)
+
+            }
+            
         }
     }
     
@@ -95,6 +111,12 @@ class HomeController : UIViewController {
         } catch {
             print("can't Sign Out")
         }
+    }
+    
+    func configure() {
+        configureUI()
+        fetchUserData()
+        fetchDrivers()
     }
     
     //MARK: Helpers
@@ -136,7 +158,29 @@ class HomeController : UIViewController {
     
 }
 
-//MARK: Location Service
+//MARK: Mapview Helper
+private extension HomeController {
+    func searchBy(naturalLabguageQuery : String, completion : @escaping([MKPlacemark]) -> Void) {
+        var results = [MKPlacemark]()
+        
+        let request = MKLocalSearch.Request()
+        request.region = mapview.region
+        request.naturalLanguageQuery = naturalLabguageQuery
+        
+        let search = MKLocalSearch(request: request)
+        search.start { (response, error) in
+            guard let response = response else {return}
+            
+            response.mapItems.forEach { (item) in
+                // add Item
+                results.append(item.placemark)
+            }
+            completion(results)
+        }
+    }
+}
+
+//MARK: Mapview delegate
 
 extension HomeController : MKMapViewDelegate {
     
@@ -188,6 +232,16 @@ extension HomeController : LocationInputActivationViewDelegate {
 //MARK: InputVIew Delegate
 
 extension HomeController : LocationInputViewDelegate {
+    
+    func executeSearch(query: String) {
+        searchBy(naturalLabguageQuery: query) { (results) in
+            // convert class Ver
+            self.searchRersults = results
+            self.tableView.reloadData()
+            
+        }
+    }
+    
     
     func handleBackBUttonTapped() {
         locationInputView.removeFromSuperview()
@@ -259,7 +313,7 @@ extension HomeController : UITableViewDelegate, UITableViewDataSource {
             return 2
         }
         
-        return 5
+        return searchRersults.count
         
         
     }
