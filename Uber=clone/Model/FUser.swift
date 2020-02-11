@@ -9,10 +9,14 @@
 import Foundation
 import CoreLocation
 
+enum AccountType : Int{
+    case passanger
+}
+
 struct FUser {
     let fullname : String
     let email : String
-    let accountType : Int
+    var accountType : AccountType!
     var location : CLLocation?
     let uid : String
     
@@ -21,6 +25,12 @@ struct FUser {
         self.fullname = dictionary[kFULLNAME] as? String ?? ""
         self.email = dictionary[kEMAIL] as? String ?? ""
         
-        self.accountType = dictionary[kACCOUNTTYPE] as? Int ?? 0
+//        self.accountType = dictionary[kACCOUNTTYPE] as? Int ?? 0
+        
+        if let index = dictionary[kACCOUNTTYPE] as? Int {
+            self.accountType = AccountType(rawValue: index)
+        }
     }
 }
+
+

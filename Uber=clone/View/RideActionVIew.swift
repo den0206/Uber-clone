@@ -9,6 +9,12 @@
 import UIKit
 import MapKit
 
+
+protocol RideActionViewDelegate : class{
+    
+    func uploadTrip(_ view : RideActionView)
+}
+
 class RideActionView: UIView {
     
     var destination : MKPlacemark? {
@@ -17,6 +23,8 @@ class RideActionView: UIView {
             addresslabel.text = destination?.address
         }
     }
+    
+    weak var delegate : RideActionViewDelegate?
 
    //MARK: Propertyt
     
@@ -121,6 +129,6 @@ class RideActionView: UIView {
     //MARK: Selectors
     
     @objc func actionButtonPressed() {
-        print("AA")
+        delegate?.uploadTrip(self)
     }
 }

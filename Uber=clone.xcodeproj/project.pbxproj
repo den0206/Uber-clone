@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1C4B095A68A956134B69E325 /* Pods_Uber_clone.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8161FD089A431FAAEC6CC17D /* Pods_Uber_clone.framework */; };
+		3A0ADA5F23F282ED00DE3A76 /* Trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0ADA5E23F282ED00DE3A76 /* Trip.swift */; };
 		3A5A7ECF23ED82DB007A0A90 /* SignupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5A7ECE23ED82DB007A0A90 /* SignupController.swift */; };
 		3A5A7ED123ED8EEE007A0A90 /* AuthButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5A7ED023ED8EEE007A0A90 /* AuthButton.swift */; };
 		3A6F0A8B23EF90590053B45F /* LocationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6F0A8A23EF90590053B45F /* LocationHandler.swift */; };
@@ -32,6 +33,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3A0ADA5E23F282ED00DE3A76 /* Trip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trip.swift; sourceTree = "<group>"; };
 		3A5A7ECE23ED82DB007A0A90 /* SignupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupController.swift; sourceTree = "<group>"; };
 		3A5A7ED023ED8EEE007A0A90 /* AuthButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthButton.swift; sourceTree = "<group>"; };
 		3A6F0A8A23EF90590053B45F /* LocationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHandler.swift; sourceTree = "<group>"; };
@@ -139,6 +141,7 @@
 			children = (
 				3AAA403523EEF290003A1F9B /* FUser.swift */,
 				3ACB83AD23EFB7BA00ECCCAC /* DriverAnnotation.swift */,
+				3A0ADA5E23F282ED00DE3A76 /* Trip.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -312,6 +315,7 @@
 				3ACB83AE23EFB7BA00ECCCAC /* DriverAnnotation.swift in Sources */,
 				3AF1A5D123EEA32500D06F51 /* LocationCell.swift in Sources */,
 				3AF99BC223EC355800BBDF38 /* SceneDelegate.swift in Sources */,
+				3A0ADA5F23F282ED00DE3A76 /* Trip.swift in Sources */,
 				3AD4E7A823EE608900FF496D /* HomeController.swift in Sources */,
 				3A5A7ECF23ED82DB007A0A90 /* SignupController.swift in Sources */,
 				3AF99BDB23EC3AA900BBDF38 /* Extensions.swift in Sources */,

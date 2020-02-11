@@ -29,6 +29,16 @@ class HomeController : UIViewController {
     private let rideActionView = RideActionView()
     private let inputActivationView = LocationInputActivationView()
     private let locationInputView = LocationInputView()
+    private var user : FUser? {
+        didSet {
+            if user?.accountType == .passanger {
+                fetchDrivers()
+                configureLocationActivationView()
+            } else {
+                print("User is Driver")
+            }
+        }
+    }
     
     private let tableView = UITableView()
     private final let locationInputViewHeight : CGFloat = 200
@@ -58,6 +68,7 @@ class HomeController : UIViewController {
         
         
         
+        
     }
     
     //MARK: API
@@ -83,9 +94,16 @@ class HomeController : UIViewController {
         guard let currentid = Auth.auth().currentUser?.uid else {return}
         Service.shared.fetchUserData(uid: currentid) { (user) in
             self.locationInputView.titleLabel.text = user.fullname
+            self.user = user
+            
         }
     }
     func fetchDrivers() {
+        // throw if user is passanger
+//        guard user?.accountType == .passanger else {
+//            print("User is Driver")
+//            return}
+    
         guard let location = locationManager?.location else {return}
         Service.shared.fetchDrivers(location: location) { (driver) in
             // 座標
@@ -162,7 +180,7 @@ class HomeController : UIViewController {
     func configure() {
         configureUI()
         fetchUserData()
-        fetchDrivers()
+//        fetchDrivers()
     }
     
     //MARK: Helpers
@@ -176,13 +194,7 @@ class HomeController : UIViewController {
         view.addSubview(actionButton)
         actionButton.anchor(top : view.safeAreaLayoutGuide.topAnchor, left:  view.safeAreaLayoutGuide.leftAnchor, paddingTop: 16,paddingLeft: 20, width: 30,height: 30)
         
-        // add activationView
-        
-        view.addSubview(inputActivationView)
-        inputActivationView.centerX(InView: view)
-        inputActivationView.setDimensions(height: 50, width: view.frame.width - 64)
-        inputActivationView.anchor(top: actionButton.bottomAnchor, paddingTop: 32)
-        inputActivationView.delegate = self
+       
         // hidedn
         inputActivationView.alpha = 0
         UIView.animate(withDuration: 2) {
@@ -192,6 +204,19 @@ class HomeController : UIViewController {
         
         configureTableView()
         
+    }
+    
+    func configureLocationActivationView() {
+        
+        guard let user = user else {return}
+        
+        guard user.accountType == .passanger else {return}
+        // add activationView
+        view.addSubview(inputActivationView)
+        inputActivationView.centerX(InView: view)
+        inputActivationView.setDimensions(height: 50, width: view.frame.width - 64)
+        inputActivationView.anchor(top: actionButton.bottomAnchor, paddingTop: 32)
+        inputActivationView.delegate = self
     }
     
     func configureActionButton(config : ActionButtonConfioguration) {
@@ -221,6 +246,7 @@ class HomeController : UIViewController {
         view.addSubview(rideActionView)
         // init hidden View
         rideActionView.frame = CGRect(x: 0, y: view.frame.height , width: view.frame.width, height: rideActionViewHeight)
+        rideActionView.delegate = self
         
     }
     
@@ -527,10 +553,27 @@ extension HomeController : UITableViewDelegate, UITableViewDataSource {
         
     }
     
+
     
+}
+
+extension HomeController : RideActionViewDelegate {
     
+    func uploadTrip(_ view: RideActionView) {
+        guard let pickupCoodinates = locationManager?.location?.coordinate else {return}
+        guard let destinationCoodinates = view.destination?.coordinate else {return}
+        
+        Service.shared.uploadTrip(pickupCoodinates, desitinationCoodinates: destinationCoodinates) { (error) in
+            
+            if error != nil {
+                print(error?.localizedDescription)
+                return
+            }
+            
+            print("Succecc Trip")
+        }
+    }
     
-    
-    
+
 }
 

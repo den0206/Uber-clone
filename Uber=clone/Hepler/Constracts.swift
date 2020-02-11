@@ -26,3 +26,9 @@ public let kVERIFICATIONCODE = "firebase_verification"
 public let kBLOCKEDUSERID = "blockedUserId"
 public let kACCOUNTTYPE = "accountType"
 
+// Coodinates
+
+public let kPICKUPCOODINATES = "picupCoodinates"
+public let kDESTINATONCOODINATES = "destinationCoodinates"
+public let kDRIVAERUID = "driverUid"
+public let kSTATE = "state"

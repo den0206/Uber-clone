@@ -64,4 +64,23 @@ class Service {
             }
         }
     }
+    
+    func uploadTrip(_ pickurCoodinates : CLLocationCoordinate2D, desitinationCoodinates : CLLocationCoordinate2D, completion : @escaping(Error?) -> Void) {
+        
+        guard let uid = Auth.auth().currentUser?.uid else {return}
+        
+        let picupArray = [pickurCoodinates.latitude, pickurCoodinates.longitude]
+        let destinationArray = [desitinationCoodinates.latitude, desitinationCoodinates.longitude ]
+        
+        let values = [kPICKUPCOODINATES : picupArray,
+                      kDESTINATONCOODINATES : destinationArray,
+                      kSTATE : TripState.requested.rawValue
+            
+                     ] as [String : Any]
+        
+        firebaseReferences(.Trip).document(uid).setData(values) { (error) in
+            
+            completion(error)
+        }
+    }
 }

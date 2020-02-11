@@ -12,6 +12,7 @@ import FirebaseFirestore
 enum References : String {
     case User
     case Driver_Location
+    case Trip
 }
 
 func firebaseReferences(_ references : References) -> CollectionReference {
