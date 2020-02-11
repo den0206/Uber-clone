@@ -46,6 +46,7 @@ class HomeController : UIViewController {
         didSet {
             guard let trip = trip else {return}
             let controller = PickupController(trip: trip)
+            controller.delegate = self
             
             if #available(iOS 13.0, *) {
                 controller.modalPresentationStyle = .fullScreen
@@ -81,10 +82,12 @@ class HomeController : UIViewController {
         checkUserIsLogin()
         enableLocationaService()
        
-        
-        
-        
-        
+  
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        guard let trip = trip else {return}
+        print(trip.state)
     }
     
     //MARK: API
@@ -576,6 +579,18 @@ extension HomeController : UITableViewDelegate, UITableViewDataSource {
     }
     
 
+    
+}
+
+//MARK: PickupCOntroller Delegate
+
+extension HomeController : PickupControllerDelegate {
+    
+    func didAcceptTrip(_ trip: Trip) {
+        self.trip?.state = .accepted
+//        self.dismiss(animated: true, completion: nil)
+    }
+    
     
 }
 

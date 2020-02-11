@@ -103,4 +103,17 @@ class Service {
             }
         }
     }
+    
+    func acceptTrip(trip : Trip, completion : @escaping(Error?) -> Void) {
+        
+        guard let currentUid = Auth.auth().currentUser?.uid else {return}
+        let values = [kDRIVAERUID : currentUid,
+                      kSTATE : TripState.accepted.rawValue] as [String : Any]
+        
+        firebaseReferences(.Trip).document(trip.passangerUId).updateData(values) { (error) in
+            if error != nil {
+                completion(error)
+            }
+        }
+    }
 }

@@ -9,9 +9,14 @@
 import UIKit
 import MapKit
 
+protocol PickupControllerDelegate : class  {
+    func didAcceptTrip(_ trip : Trip)
+}
+
 class PickupController : UIViewController {
     
     private let mapView = MKMapView()
+    weak var delegate : PickupControllerDelegate?
     
     //MARK: Parts
     
@@ -22,7 +27,7 @@ class PickupController : UIViewController {
         return button
     }()
     
-    private let pickuoLabel : UILabel = {
+    private let pickupLabel : UILabel = {
         let label = UILabel()
         label.text = "pick Up"
         label.font = UIFont.systemFont(ofSize: 16)
@@ -74,7 +79,12 @@ class PickupController : UIViewController {
     }
     
     @objc func handleAcceptTrip() {
-        print("Accept")
+        // update State
+        Service.shared.acceptTrip(trip: trip) { (error) in
+            self.delegate?.didAcceptTrip(self.trip)
+        }
+        dismiss(animated: true, completion: nil)
+        
     }
   
     
@@ -103,12 +113,12 @@ class PickupController : UIViewController {
         mapView.centerX(InView: view)
         mapView.centerY(inView: view, constant: -200)
         
-        view.addSubview(pickuoLabel)
-        pickuoLabel.centerX(InView: view)
-        pickuoLabel.anchor(top : mapView.bottomAnchor, paddingTop: 16)
+        view.addSubview(pickupLabel)
+        pickupLabel.centerX(InView: view)
+        pickupLabel.anchor(top : mapView.bottomAnchor, paddingTop: 16)
         
         view.addSubview(acceptTriplButton)
-        acceptTriplButton.anchor(top: pickuoLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 16, paddingLeft: 32, paddingBottom: 0, paddingRight: 32, height: 50)
+        acceptTriplButton.anchor(top: pickupLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 16, paddingLeft: 32, paddingBottom: 0, paddingRight: 32, height: 50)
   
     }
 }
