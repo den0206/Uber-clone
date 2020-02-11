@@ -13,6 +13,15 @@ import MapKit
 private let reuserIdentifier = "LocationCell"
 private let annotationIdentifer = "DriverAnnotation"
 
+enum ActionButtonConfioguration {
+    case showMenu
+    case dismissActionView
+    
+    init() {
+        self = .showMenu
+    }
+}
+
 class HomeController : UIViewController {
     
     private let mapview = MKMapView()
@@ -25,6 +34,15 @@ class HomeController : UIViewController {
     private final let locationInputViewHeight : CGFloat = 200
     
     private var searchRersults = [MKPlacemark]()
+    private var actionButtonConfigure = ActionButtonConfioguration()
+    private var route : MKRoute?
+    
+    private let actionButton : UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(#imageLiteral(resourceName: "baseline_menu_black_36dp").withRenderingMode(.alwaysOriginal), for: .normal)
+        button.addTarget(self, action: #selector(seleceActionButtonPressed), for: .touchUpInside)
+        return button
+    }()
     
     
     //MARK: Life Cycle
@@ -96,6 +114,31 @@ class HomeController : UIViewController {
         }
     }
     
+    //MARK: Selectors
+    
+    @objc func seleceActionButtonPressed() {
+        
+        switch actionButtonConfigure {
+        case .showMenu:
+            print("SideMenu")
+        case .dismissActionView :
+            
+           removeAnnotaionsandOverlays()
+           
+           // Expire Zoom
+           mapview.showAnnotations(mapview.annotations, animated: true)
+           
+           
+            // return show menu
+            UIView.animate(withDuration: 0.3) {
+                self.inputActivationView.alpha = 1
+                self.configureActionButton(config: .showMenu)
+            }
+            
+           
+        }
+    }
+    
     private func signOut() {
         do {
             try Auth.auth().signOut()
@@ -125,12 +168,15 @@ class HomeController : UIViewController {
     func configureUI() {
         configureMapView()
         
+        view.addSubview(actionButton)
+        actionButton.anchor(top : view.safeAreaLayoutGuide.topAnchor, left:  view.safeAreaLayoutGuide.leftAnchor, paddingTop: 16,paddingLeft: 20, width: 30,height: 30)
+        
         // add activationView
         
         view.addSubview(inputActivationView)
         inputActivationView.centerX(InView: view)
         inputActivationView.setDimensions(height: 50, width: view.frame.width - 64)
-        inputActivationView.anchor(top: view.safeAreaLayoutGuide.topAnchor, paddingTop: 32)
+        inputActivationView.anchor(top: actionButton.bottomAnchor, paddingTop: 32)
         inputActivationView.delegate = self
         // hidedn
         inputActivationView.alpha = 0
@@ -141,6 +187,19 @@ class HomeController : UIViewController {
         
         configureTableView()
         
+    }
+    
+    func configureActionButton(config : ActionButtonConfioguration) {
+        
+        switch config {
+        case .showMenu:
+            actionButton.setImage(#imageLiteral(resourceName: "baseline_menu_black_36dp").withRenderingMode(.alwaysOriginal), for: .normal)
+            // return SHow Menu
+            actionButtonConfigure = .showMenu
+        case .dismissActionView :
+            actionButton.setImage(#imageLiteral(resourceName: "baseline_arrow_back_black_36dp").withRenderingMode(.alwaysOriginal), for: .normal)
+            actionButtonConfigure = .dismissActionView
+        }
     }
     
     func configureMapView() {
@@ -160,6 +219,7 @@ class HomeController : UIViewController {
 
 //MARK: Mapview Helper
 private extension HomeController {
+    //MARK: Search
     func searchBy(naturalLabguageQuery : String, completion : @escaping([MKPlacemark]) -> Void) {
         var results = [MKPlacemark]()
         
@@ -178,12 +238,49 @@ private extension HomeController {
             completion(results)
         }
     }
+    
+    //MARK: Direction Line
+    
+    func generatePolyLine(toDestination destination : MKMapItem) {
+        
+        let request = MKDirections.Request()
+        request.source = MKMapItem.forCurrentLocation()
+        request.destination = destination
+         
+        let directionRequest = MKDirections(request: request)
+        directionRequest.calculate { (response, error) in
+            guard let response = response else {return}
+            self.route = response.routes[0]
+            
+            guard let polyLine = self.route?.polyline else {return}
+            self.mapview.addOverlay(polyLine)
+        }
+    }
+    
+    //MARK: Remove Direction Line
+    
+    func removeAnnotaionsandOverlays() {
+        
+        // remove annotations
+        mapview.annotations.forEach { (annotations) in
+            if let anno = annotations as? MKPointAnnotation {
+                mapview.removeAnnotation(anno)
+            }
+        }
+        
+        // remove direction Line
+        if mapview.overlays.count > 0 {
+            mapview.removeOverlay(mapview.overlays[0])
+        }
+        
+    }
 }
 
 //MARK: Mapview delegate
 
 extension HomeController : MKMapViewDelegate {
     
+    //MARK: ANnotaion
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if let annotation = annotation as? DriverAnnotation {
             let view = MKAnnotationView(annotation: annotation, reuseIdentifier: annotationIdentifer)
@@ -192,6 +289,21 @@ extension HomeController : MKMapViewDelegate {
         }
         
         return nil
+    }
+    
+    //MARK: direction Map
+    
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        if let route = self.route {
+            let polyLine = route.polyline
+            let lineRenderer = MKPolylineRenderer(polyline: polyLine)
+            
+            lineRenderer.strokeColor = .mainBlueTint
+            lineRenderer.lineWidth = 4
+            return lineRenderer
+        }
+        
+        return MKOverlayRenderer()
     }
 }
 
@@ -336,16 +448,42 @@ extension HomeController : UITableViewDelegate, UITableViewDataSource {
         // blank not nil
         return "   "
     }
+    
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedPlaceMark = searchRersults[indexPath.row]
+//        var annotaions = [MKAnnotation]()
+        
+        self.configureActionButton(config: .dismissActionView)
+        
+        // change MKMapItem
+        let destination = MKMapItem(placemark: selectedPlaceMark)
+        
+        // add deirection Map
+        generatePolyLine(toDestination: destination)
         
        handleBackBUttonTapped()
         let annotation = MKPointAnnotation()
         annotation.coordinate = selectedPlaceMark.coordinate
         self.mapview.addAnnotation(annotation)
         
-        // Zoom Annotation
         mapview.selectAnnotation(annotation, animated: true)
+        
+        // Zoom Selected Annotations
+//
+//        mapview.annotations.forEach { (annotation) in
+//            if let anno = annotation as? MKUserLocation {
+//                annotaions.append(anno)
+//            }
+//
+//            if let anno = annotation as? MKPointAnnotation {
+//                annotaions.append(anno)
+//            }
+//        }
+//
+        
+        let annotaions = self.mapview.annotations.filter({ !$0.isKind(of: DriverAnnotation.self)})
+        mapview.showAnnotations(annotaions, animated: true)
         
     }
     
