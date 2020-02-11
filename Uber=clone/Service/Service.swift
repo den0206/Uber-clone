@@ -83,4 +83,24 @@ class Service {
             completion(error)
         }
     }
+    
+    
+    func obserebeTrip(completion : @escaping(Trip) -> Void) {
+        firebaseReferences(.Trip).addSnapshotListener { (snapshot, error) in
+            guard let snapshot = snapshot else {return}
+            
+            if !snapshot.isEmpty {
+                snapshot.documentChanges.forEach { (diff) in
+                    
+                    if (diff.type == .added) {
+                        guard let dictionary = diff.document.data() as? [String : Any] else {return}
+                        let trip = Trip(_passangerUid: diff.document.documentID, dictionary: dictionary)
+                        
+                        completion(trip)
+                    }
+                }
+                
+            }
+        }
+    }
 }

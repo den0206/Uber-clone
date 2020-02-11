@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1C4B095A68A956134B69E325 /* Pods_Uber_clone.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8161FD089A431FAAEC6CC17D /* Pods_Uber_clone.framework */; };
 		3A0ADA5F23F282ED00DE3A76 /* Trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0ADA5E23F282ED00DE3A76 /* Trip.swift */; };
+		3A22A7D323F29A6A0056A1D4 /* PickupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A22A7D223F29A6A0056A1D4 /* PickupController.swift */; };
 		3A5A7ECF23ED82DB007A0A90 /* SignupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5A7ECE23ED82DB007A0A90 /* SignupController.swift */; };
 		3A5A7ED123ED8EEE007A0A90 /* AuthButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5A7ED023ED8EEE007A0A90 /* AuthButton.swift */; };
 		3A6F0A8B23EF90590053B45F /* LocationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6F0A8A23EF90590053B45F /* LocationHandler.swift */; };
@@ -34,6 +35,7 @@
 
 /* Begin PBXFileReference section */
 		3A0ADA5E23F282ED00DE3A76 /* Trip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trip.swift; sourceTree = "<group>"; };
+		3A22A7D223F29A6A0056A1D4 /* PickupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickupController.swift; sourceTree = "<group>"; };
 		3A5A7ECE23ED82DB007A0A90 /* SignupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupController.swift; sourceTree = "<group>"; };
 		3A5A7ED023ED8EEE007A0A90 /* AuthButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthButton.swift; sourceTree = "<group>"; };
 		3A6F0A8A23EF90590053B45F /* LocationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHandler.swift; sourceTree = "<group>"; };
@@ -164,6 +166,7 @@
 				3AF99BD823EC364C00BBDF38 /* LoginController.swift */,
 				3A5A7ECE23ED82DB007A0A90 /* SignupController.swift */,
 				3AD4E7A723EE608900FF496D /* HomeController.swift */,
+				3A22A7D223F29A6A0056A1D4 /* PickupController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -318,6 +321,7 @@
 				3A0ADA5F23F282ED00DE3A76 /* Trip.swift in Sources */,
 				3AD4E7A823EE608900FF496D /* HomeController.swift in Sources */,
 				3A5A7ECF23ED82DB007A0A90 /* SignupController.swift in Sources */,
+				3A22A7D323F29A6A0056A1D4 /* PickupController.swift in Sources */,
 				3AF99BDB23EC3AA900BBDF38 /* Extensions.swift in Sources */,
 				3AD836E523EE43A100BB9505 /* Constracts.swift in Sources */,
 				3AF1A5CC23EE87C000D06F51 /* LocationInputView.swift in Sources */,

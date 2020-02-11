@@ -29,14 +29,29 @@ class HomeController : UIViewController {
     private let rideActionView = RideActionView()
     private let inputActivationView = LocationInputActivationView()
     private let locationInputView = LocationInputView()
+    
     private var user : FUser? {
         didSet {
             if user?.accountType == .passanger {
                 fetchDrivers()
                 configureLocationActivationView()
             } else {
-                print("User is Driver")
+                // Driver
+                obserbeTrips()
             }
+        }
+    }
+    
+    private var trip : Trip? {
+        didSet {
+            guard let trip = trip else {return}
+            let controller = PickupController(trip: trip)
+            
+            if #available(iOS 13.0, *) {
+                controller.modalPresentationStyle = .fullScreen
+            }
+            
+            self.present(controller, animated: true, completion: nil)
         }
     }
     
@@ -65,6 +80,7 @@ class HomeController : UIViewController {
         // check Login
         checkUserIsLogin()
         enableLocationaService()
+       
         
         
         
@@ -130,6 +146,12 @@ class HomeController : UIViewController {
                 
             }
             
+        }
+    }
+    
+    func obserbeTrips() {
+        Service.shared.obserebeTrip { (trip) in
+            self.trip = trip
         }
     }
     
