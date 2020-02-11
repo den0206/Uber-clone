@@ -26,12 +26,13 @@ class HomeController : UIViewController {
     
     private let mapview = MKMapView()
     private let locationManager = LocationHandler.shared.locationManager
-    
+    private let rideActionView = RideActionView()
     private let inputActivationView = LocationInputActivationView()
     private let locationInputView = LocationInputView()
     
     private let tableView = UITableView()
     private final let locationInputViewHeight : CGFloat = 200
+    private final let rideActionViewHeight : CGFloat = 300
     
     private var searchRersults = [MKPlacemark]()
     private var actionButtonConfigure = ActionButtonConfioguration()
@@ -54,8 +55,8 @@ class HomeController : UIViewController {
         // check Login
         checkUserIsLogin()
         enableLocationaService()
-
-  
+        
+        
         
     }
     
@@ -90,7 +91,7 @@ class HomeController : UIViewController {
             // 座標
             guard let coodinate = driver.location?.coordinate else {return}
             let driverAnnotation = DriverAnnotation(_uid: driver.uid, _coodinate: coodinate)
-           
+            
             var driverIsVisble : Bool {
                 
                 return self.mapview.annotations.contains { (annotation) -> Bool in
@@ -100,15 +101,15 @@ class HomeController : UIViewController {
                         driverAnno.updateAnnotationPosition(withCoodinate: coodinate)
                         return true
                     }
-                     return false
+                    return false
                 }
-               
+                
             }
             
             if !driverIsVisble {
                 // add Annotation
                 self.mapview.addAnnotation(driverAnnotation)
-
+                
             }
             
         }
@@ -123,19 +124,21 @@ class HomeController : UIViewController {
             print("SideMenu")
         case .dismissActionView :
             
-           removeAnnotaionsandOverlays()
-           
-           // Expire Zoom
-           mapview.showAnnotations(mapview.annotations, animated: true)
-           
-           
+            removeAnnotaionsandOverlays()
+            
+            // Expire Zoom
+            mapview.showAnnotations(mapview.annotations, animated: true)
+            
+            
             // return show menu
             UIView.animate(withDuration: 0.3) {
                 self.inputActivationView.alpha = 1
                 self.configureActionButton(config: .showMenu)
+                // dismiss Ride VIew
+                self.animateRideActionView(shoudShow: false)
             }
             
-           
+            
         }
     }
     
@@ -167,6 +170,8 @@ class HomeController : UIViewController {
     
     func configureUI() {
         configureMapView()
+        configuyreRideActionView()
+        
         
         view.addSubview(actionButton)
         actionButton.anchor(top : view.safeAreaLayoutGuide.topAnchor, left:  view.safeAreaLayoutGuide.leftAnchor, paddingTop: 16,paddingLeft: 20, width: 30,height: 30)
@@ -212,6 +217,33 @@ class HomeController : UIViewController {
         mapview.delegate = self
     }
     
+    func configuyreRideActionView() {
+        view.addSubview(rideActionView)
+        // init hidden View
+        rideActionView.frame = CGRect(x: 0, y: view.frame.height , width: view.frame.width, height: rideActionViewHeight)
+        
+    }
+    
+    func animateRideActionView(shoudShow : Bool, destination : MKPlacemark? =  nil) {
+        
+        if shoudShow {
+            UIView.animate(withDuration: 0.3) {
+                self.rideActionView.frame.origin.y = self.view.frame.height - self.rideActionViewHeight
+            }
+            
+            guard let destination = destination else {return}
+            rideActionView.destination = destination
+        } else {
+            UIView.animate(withDuration: 0.3) {
+                self.rideActionView.frame.origin.y = self.view.frame.height
+            }
+            
+        }
+        
+        //        let  yOrigin = shoudShow ? self.view.frame.height - self.rideActionViewHeight : self.view.frame.height
+        
+    }
+    
     
     
     
@@ -246,7 +278,7 @@ private extension HomeController {
         let request = MKDirections.Request()
         request.source = MKMapItem.forCurrentLocation()
         request.destination = destination
-         
+        
         let directionRequest = MKDirections(request: request)
         directionRequest.calculate { (response, error) in
             guard let response = response else {return}
@@ -452,7 +484,7 @@ extension HomeController : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedPlaceMark = searchRersults[indexPath.row]
-//        var annotaions = [MKAnnotation]()
+        //        var annotaions = [MKAnnotation]()
         
         self.configureActionButton(config: .dismissActionView)
         
@@ -462,7 +494,7 @@ extension HomeController : UITableViewDelegate, UITableViewDataSource {
         // add deirection Map
         generatePolyLine(toDestination: destination)
         
-       handleBackBUttonTapped()
+        handleBackBUttonTapped()
         let annotation = MKPointAnnotation()
         annotation.coordinate = selectedPlaceMark.coordinate
         self.mapview.addAnnotation(annotation)
@@ -470,20 +502,28 @@ extension HomeController : UITableViewDelegate, UITableViewDataSource {
         mapview.selectAnnotation(annotation, animated: true)
         
         // Zoom Selected Annotations
-//
-//        mapview.annotations.forEach { (annotation) in
-//            if let anno = annotation as? MKUserLocation {
-//                annotaions.append(anno)
-//            }
-//
-//            if let anno = annotation as? MKPointAnnotation {
-//                annotaions.append(anno)
-//            }
-//        }
-//
+        //
+        //        mapview.annotations.forEach { (annotation) in
+        //            if let anno = annotation as? MKUserLocation {
+        //                annotaions.append(anno)
+        //            }
+        //
+        //            if let anno = annotation as? MKPointAnnotation {
+        //                annotaions.append(anno)
+        //            }
+        //        }
+        //
         
         let annotaions = self.mapview.annotations.filter({ !$0.isKind(of: DriverAnnotation.self)})
-        mapview.showAnnotations(annotaions, animated: true)
+//        mapview.showAnnotations(annotaions, animated: true)
+        
+        // custom ZoomUo
+        mapview.zoomToFit(annotations: annotaions)
+        
+        animateRideActionView(shoudShow: true, destination: selectedPlaceMark)
+        
+        // pass
+//        rideActionView.destination = selectedPlaceMark
         
     }
     
