@@ -35,6 +35,8 @@ class HomeController : UIViewController {
             if user?.accountType == .passanger {
                 fetchDrivers()
                 configureLocationActivationView()
+                // for passanger
+                observeCurrentTrip()
             } else {
                 // Driver
                 obserbeTrips()
@@ -44,15 +46,23 @@ class HomeController : UIViewController {
     
     private var trip : Trip? {
         didSet {
-            guard let trip = trip else {return}
-            let controller = PickupController(trip: trip)
-            controller.delegate = self
             
-            if #available(iOS 13.0, *) {
-                controller.modalPresentationStyle = .fullScreen
+            guard let user = user else {return}
+            
+            if user.accountType == .passanger {
+                print("Passanger trip")
+            } else {
+                guard let trip = trip else {return}
+                let controller = PickupController(trip: trip)
+                controller.delegate = self
+                
+                if #available(iOS 13.0, *) {
+                    controller.modalPresentationStyle = .fullScreen
+                }
+                
+                self.present(controller, animated: true, completion: nil)
             }
             
-            self.present(controller, animated: true, completion: nil)
         }
     }
     
@@ -81,6 +91,7 @@ class HomeController : UIViewController {
         // check Login
         checkUserIsLogin()
         enableLocationaService()
+        
        
   
     }
@@ -149,6 +160,19 @@ class HomeController : UIViewController {
                 
             }
             
+        }
+    }
+    
+    func observeCurrentTrip() {
+        Service.shared.observeCurrentTrip { (trip) in
+            self.trip = trip
+            
+            
+            if trip.state == .accepted {
+                // dismiss IndicatorView
+                
+                self.shouldPresentLoadingView(false)
+            }
         }
     }
     
@@ -587,8 +611,19 @@ extension HomeController : UITableViewDelegate, UITableViewDataSource {
 extension HomeController : PickupControllerDelegate {
     
     func didAcceptTrip(_ trip: Trip) {
-        self.trip?.state = .accepted
-//        self.dismiss(animated: true, completion: nil)
+//        self.trip?.state = .accepted
+////        self.dismiss(animated: true, completion: nil)
+        let anno = MKPointAnnotation()
+        anno.coordinate = trip.pickupCoodinates
+        mapview.addAnnotation(anno)
+        mapview.selectAnnotation(anno, animated: true)
+        
+        let placeMark = MKPlacemark(coordinate: trip.pickupCoodinates)
+        let mapItem = MKMapItem(placemark: placeMark)
+        
+        generatePolyLine(toDestination: mapItem)
+        
+        mapview.zoomToFit(annotations: mapview.annotations)
     }
     
     
@@ -600,6 +635,9 @@ extension HomeController : RideActionViewDelegate {
         guard let pickupCoodinates = locationManager?.location?.coordinate else {return}
         guard let destinationCoodinates = view.destination?.coordinate else {return}
         
+        // Indicator View
+        shouldPresentLoadingView(true, message: "Finding you a ride...")
+        
         Service.shared.uploadTrip(pickupCoodinates, desitinationCoodinates: destinationCoodinates) { (error) in
             
             if error != nil {
@@ -607,7 +645,12 @@ extension HomeController : RideActionViewDelegate {
                 return
             }
             
-            print("Succecc Trip")
+            // hide rideActionView
+            
+            UIView.animate(withDuration: 0.3) {
+                self.rideActionView.frame.origin.y = self.view.frame.height
+            }
+            
         }
     }
     

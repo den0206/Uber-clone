@@ -116,4 +116,22 @@ class Service {
             }
         }
     }
+    
+    // for passanger
+    
+    func observeCurrentTrip(completion : @escaping(Trip) -> Void) {
+        
+        guard let currentUid = Auth.auth().currentUser?.uid else {return}
+        firebaseReferences(.Trip).document(currentUid).addSnapshotListener { (snapshot, error) in
+            guard let snapshot  = snapshot else {return}
+            
+            if snapshot.exists {
+                guard let dictionary = snapshot.data() as? [String :Any] else {return}
+                let uid = snapshot.documentID
+                let trip = Trip(_passangerUid: uid, dictionary: dictionary)
+                completion(trip)
+                
+            }
+        }
+    }
 }

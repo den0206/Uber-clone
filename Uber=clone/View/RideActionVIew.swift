@@ -15,6 +15,45 @@ protocol RideActionViewDelegate : class{
     func uploadTrip(_ view : RideActionView)
 }
 
+enum RidectionViewConfiguration {
+    case requestRide
+    case tripAccepted
+    case pickupPassanger
+    case tripInProgress
+    case endTrip
+    
+    init() {
+        self = .requestRide
+    }
+}
+
+enum ButtonAction : CustomStringConvertible{
+    case requestRide
+    case cancel
+    case getDirection
+    case pickUp
+    case dropOff
+    
+    var description : String {
+        
+        switch  self {
+        case .requestRide:
+            return "Confirm Uber"
+        case .cancel :
+            return "Cancel"
+        case .getDirection :
+           return  "get Direction"
+        case .pickUp :
+            return "Pick Up"
+        case .dropOff :
+            return "Drop Off"
+        }
+    }
+    
+    init() {
+        self = .requestRide
+    }
+}
 class RideActionView: UIView {
     
     var destination : MKPlacemark? {
@@ -23,6 +62,9 @@ class RideActionView: UIView {
             addresslabel.text = destination?.address
         }
     }
+    
+    var config = RidectionViewConfiguration()
+    var buttonAction = ButtonAction()
     
     weak var delegate : RideActionViewDelegate?
 
@@ -130,5 +172,11 @@ class RideActionView: UIView {
     
     @objc func actionButtonPressed() {
         delegate?.uploadTrip(self)
+    }
+    
+    //MARK: Helper
+    
+    func configureUI(withconfig config : ActionButtonConfioguration) {
+        
     }
 }
