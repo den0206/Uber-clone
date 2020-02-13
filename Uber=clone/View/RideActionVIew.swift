@@ -67,6 +67,7 @@ class RideActionView: UIView {
     var buttonAction = ButtonAction()
     
     weak var delegate : RideActionViewDelegate?
+    var user : FUser?
 
    //MARK: Propertyt
     
@@ -176,7 +177,33 @@ class RideActionView: UIView {
     
     //MARK: Helper
     
-    func configureUI(withconfig config : ActionButtonConfioguration) {
+    func configureUI(withconfig config : RidectionViewConfiguration) {
+        switch config {
         
+        case .requestRide:
+            buttonAction = .requestRide
+            actionButton.setTitle(buttonAction.description, for: .normal)
+            
+        case .tripAccepted:
+            guard let user = user else {return}
+            
+            if user.accountType == .passanger {
+                titleLabel.text = "Route To Passanger"
+                buttonAction = .getDirection
+                actionButton.setTitle(buttonAction.description, for: .normal)
+            } else {
+                buttonAction = .cancel
+                actionButton.setTitle(buttonAction.description, for: .normal)
+                titleLabel.text = "Driver To Route"
+            }
+
+        case .pickupPassanger:
+          break
+        case .tripInProgress:
+            break
+        case .endTrip:
+            break
+        
+        }
     }
 }
