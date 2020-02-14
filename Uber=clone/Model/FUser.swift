@@ -11,7 +11,7 @@ import CoreLocation
 
 enum AccountType : Int{
     case passanger
-//    case driver
+    case driver
 }
 
 struct FUser {

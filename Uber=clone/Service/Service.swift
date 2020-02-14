@@ -98,24 +98,41 @@ class Service {
                         
                         completion(trip)
                     }
+                    
+                    if (diff.type == .modified) {
+                        guard let dictionary = diff.document.data() as? [String : Any] else {return}
+                        let trip = Trip(_passangerUid: diff.document.documentID, dictionary: dictionary)
+                        
+                        completion(trip)
+                    }
                 }
                 
             }
         }
     }
     
-    func acceptTrip(trip : Trip, completion : @escaping(Error?) -> Void) {
-        
-        guard let currentUid = Auth.auth().currentUser?.uid else {return}
-        let values = [kDRIVAERUID : currentUid,
-                      kSTATE : TripState.accepted.rawValue] as [String : Any]
-        
-        firebaseReferences(.Trip).document(trip.passangerUId).updateData(values) { (error) in
-            if error != nil {
-                completion(error)
-            }
-        }
-    }
+//    func acceptTrip(trip : Trip, completion : @escaping(Error?) -> Void) {
+//
+//        guard let currentUid = Auth.auth().currentUser?.uid else {return}
+//        let values = [kDRIVAERUID : currentUid,
+//                      kSTATE : TripState.accepted.rawValue] as [String : Any]
+//
+//        firebaseReferences(.Trip).document(trip.passangerUId).updateData(values) { (error) in
+//            if error != nil {
+//                completion(error)
+//            }
+//        }
+//    }
+    
+    func acceptTrip(trip : Trip) {
+          
+          guard let currentUid = Auth.auth().currentUser?.uid else {return}
+          let values = [kDRIVAERUID : currentUid,
+                        kSTATE : TripState.accepted.rawValue] as [String : Any]
+          
+          firebaseReferences(.Trip).document(trip.passangerUId).updateData(values)
+      }
+      
     
     // for passanger
     

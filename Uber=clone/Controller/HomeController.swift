@@ -53,6 +53,8 @@ class HomeController : UIViewController {
                 print("Passanger trip")
             } else {
                 guard let trip = trip else {return}
+                
+                
                 let controller = PickupController(trip: trip)
                 controller.delegate = self
                 
@@ -61,6 +63,7 @@ class HomeController : UIViewController {
                 }
                 
                 self.present(controller, animated: true, completion: nil)
+                
             }
             
         }
@@ -100,7 +103,8 @@ class HomeController : UIViewController {
         guard let trip = trip else {
             print("no Trip")
             return}
-        print(trip.state)
+        
+       
     }
     
     //MARK: API
@@ -635,7 +639,7 @@ extension HomeController : PickupControllerDelegate {
     
     func didAcceptTrip(_ trip: Trip) {
 //        self.trip?.state = .accepted
-////        self.dismiss(animated: true, completion: nil)
+//        self.dismiss(animated: true, completion: nil)
         
         print("Push")
         let anno = MKPointAnnotation()
@@ -651,10 +655,11 @@ extension HomeController : PickupControllerDelegate {
         
         mapview.zoomToFit(annotations: mapview.annotations)
         
-        self.dismiss(animated: true, completion: nil)
+        
         
         Service.shared.fetchUserData(uid: trip.passangerUId) { (passanger) in
             self.animateRideActionView(shoudShow: true, config: .tripAccepted, user: passanger)
+            self.dismiss(animated: true, completion: nil)
         }
     }
     

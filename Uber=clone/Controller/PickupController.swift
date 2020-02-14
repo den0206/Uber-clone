@@ -80,10 +80,9 @@ class PickupController : UIViewController {
     
     @objc func handleAcceptTrip() {
         // update State
-        Service.shared.acceptTrip(trip: trip) { (error) in
-            self.delegate?.didAcceptTrip(self.trip)
-        }
-        dismiss(animated: true, completion: nil)
+        Service.shared.acceptTrip(trip: trip)
+        delegate?.didAcceptTrip(trip)
+//        dismiss(animated: true, completion: nil)
         
     }
   
