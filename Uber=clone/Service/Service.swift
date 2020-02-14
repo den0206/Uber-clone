@@ -105,11 +105,23 @@ class Service {
                         
                         completion(trip)
                     }
+                    
+                   
                 }
                 
             }
         }
     }
+    
+    func observeTripCancelled(trip : Trip, completion : @escaping(Bool) -> Void) {
+        firebaseReferences(.Trip).document(trip.passangerUId).getDocument { (snapshot, error) in
+            guard let snapshot = snapshot else {return}
+            
+            completion(snapshot.exists)
+            
+        }
+    }
+    
     
 //    func acceptTrip(trip : Trip, completion : @escaping(Error?) -> Void) {
 //
@@ -149,6 +161,15 @@ class Service {
                 completion(trip)
                 
             }
+        }
+    }
+    
+    func cancelTrip(completion : @escaping(Error?) -> Void) {
+        
+        guard let uid = Auth.auth().currentUser?.uid else {return}
+        
+        firebaseReferences(.Trip).document(uid).delete { (error) in
+            completion(error)
         }
     }
 }

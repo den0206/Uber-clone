@@ -95,6 +95,7 @@ class HomeController : UIViewController {
         checkUserIsLogin()
         enableLocationaService()
         
+        
        
   
     }
@@ -408,6 +409,13 @@ private extension HomeController {
         }
         
     }
+    
+    func centerMapOnUserLocation() {
+        guard let coodinate = locationManager?.location?.coordinate else {return}
+        
+        let region = MKCoordinateRegion(center: coodinate, latitudinalMeters: 2000, longitudinalMeters: 2000)
+        mapview.setRegion(region, animated: true)
+    }
 }
 
 //MARK: Mapview delegate
@@ -655,6 +663,16 @@ extension HomeController : PickupControllerDelegate {
         
         mapview.zoomToFit(annotations: mapview.annotations)
         
+        // check trip has Cancel
+        
+        Service.shared.observeTripCancelled(trip: trip) { (exist) in
+            if !exist {
+                self.removeAnnotaionsandOverlays()
+                self.animateRideActionView(shoudShow: false)
+                self.centerMapOnUserLocation()
+            }
+        }
+        
         
         
         Service.shared.fetchUserData(uid: trip.passangerUId) { (passanger) in
@@ -667,6 +685,7 @@ extension HomeController : PickupControllerDelegate {
 }
 
 extension HomeController : RideActionViewDelegate {
+   
     
     func uploadTrip(_ view: RideActionView) {
         guard let pickupCoodinates = locationManager?.location?.coordinate else {return}
@@ -691,6 +710,30 @@ extension HomeController : RideActionViewDelegate {
         }
     }
     
-
+    func cancelTrip() {
+        
+        // delete Trip
+        Service.shared.cancelTrip { (error) in
+            
+            if error != nil {
+                print("Couldn't delete Trip")
+                return
+            }
+            self.animateRideActionView(shoudShow: false)
+            self.removeAnnotaionsandOverlays()
+            self.centerMapOnUserLocation()
+            // show Error Alert
+            self.presentAlertController(withTitle: "Oops Passange has decided Cancel", withMessage: "Passanger Cancel" )
+            
+            // return Show Menu
+            self.actionButton.setImage(#imageLiteral(resourceName: "baseline_menu_black_36dp").withRenderingMode(.alwaysOriginal), for: .normal)
+            self.actionButtonConfigure = .showMenu
+            
+            
+        }
+    }
+    
+    
+    
 }
 
