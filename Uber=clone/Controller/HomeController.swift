@@ -89,7 +89,7 @@ class HomeController : UIViewController {
     }()
     
     
-    //MARK: Life Cycle
+    //MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -112,7 +112,7 @@ class HomeController : UIViewController {
        
     }
     
-    //MARK: API
+    //MARK: - API
     
     private func checkUserIsLogin() {
         
@@ -146,7 +146,7 @@ class HomeController : UIViewController {
 //            return}
     
         guard let location = locationManager?.location else {return}
-        Service.shared.fetchDrivers(location: location) { (driver) in
+        PassangerService.shared.fetchDrivers(location: location) { (driver) in
             // 座標
             guard let coodinate = driver.location?.coordinate else {return}
             let driverAnnotation = DriverAnnotation(_uid: driver.uid, _coodinate: coodinate)
@@ -175,9 +175,11 @@ class HomeController : UIViewController {
         }
     }
     
+    //MARK: - Passanger API
+    
     func observeCurrentTrip() {
         
-        Service.shared.observeCurrentTrip { (trip) in
+        PassangerService.shared.observeCurrentTrip { (trip) in
             self.trip = trip
             guard let state = trip.state else {return}
             
@@ -210,7 +212,7 @@ class HomeController : UIViewController {
             case .completed:
               
                 // Complete!
-                Service.shared.deleteTrip { (error) in
+                PassangerService.shared.deleteTrip { (error) in
                     self.animateRideActionView(shoudShow: false)
                     self.centerMapOnUserLocation()
                     self.inputActivationView.alpha = 1
@@ -224,16 +226,10 @@ class HomeController : UIViewController {
         }
     }
     
-    func obserbeTrips() {
-        Service.shared.obserebeTrip { (trip) in
-            self.trip = trip
-        }
-    }
-    
     func startTrip() {
         guard let trip = self.trip else {return}
         
-        Service.shared.updateTripState(trip: trip, state: .inProgress) { (error) in
+        DriverService.shared.updateTripState(trip: trip, state: .inProgress) { (error) in
             
             if error != nil {
                 print("Can't Start \(error!.localizedDescription))")
@@ -253,7 +249,24 @@ class HomeController : UIViewController {
         }
     }
     
-    //MARK: Selectors
+    //MARK: - Driver API
+    func obserbeTrips() {
+        DriverService.shared.obserebeTrip { (trip) in
+            self.trip = trip
+        }
+    }
+    
+    func observeCancelTrip(trip : Trip) {
+        DriverService.shared.observeTripCancelled(trip: trip) { (exist) in
+            if !exist {
+                self.removeAnnotaionsandOverlays()
+                self.animateRideActionView(shoudShow: false)
+                self.centerMapOnUserLocation()
+            }
+        }
+    }
+    
+    //MARK: - Selectors
     
     @objc func seleceActionButtonPressed() {
         
@@ -303,7 +316,7 @@ class HomeController : UIViewController {
 //        fetchDrivers()
     }
     
-    //MARK: Helpers
+    //MARK: - Helpers
     
     
     func configureUI() {
@@ -407,7 +420,7 @@ class HomeController : UIViewController {
     
 }
 
-//MARK: Mapview Helper
+//MARK: - Mapview Helper
 private extension HomeController {
     //MARK: Search
     func searchBy(naturalLabguageQuery : String, completion : @escaping([MKPlacemark]) -> Void) {
@@ -447,7 +460,7 @@ private extension HomeController {
         }
     }
     
-    //MARK: Remove Direction Line
+    //MARK: - Remove Direction Line
     
     func removeAnnotaionsandOverlays() {
         
@@ -504,7 +517,7 @@ private extension HomeController {
     
 }
 
-//MARK: Mapview delegate
+//MARK: - Mapview delegate
 
 extension HomeController : MKMapViewDelegate {
     
@@ -541,7 +554,7 @@ extension HomeController : MKMapViewDelegate {
         guard  user.accountType == .driver else {return}
         guard let location = userLocation.location else {return}
         
-        Service.shared.updateDriverLocation(location: location)
+        DriverService.shared.updateDriverLocation(location: location)
     }
     
 }
@@ -588,7 +601,7 @@ extension HomeController : CLLocationManagerDelegate{
         guard let trip = self.trip else {return}
         
         if region.identifier == AnnotaionType.pickUp.rawValue {
-            Service.shared.updateTripState(trip: trip, state: .driverArrived) { (error) in
+            DriverService.shared.updateTripState(trip: trip, state: .driverArrived) { (error) in
                 
                 if error != nil {
                     print("Can't update \(error!.localizedDescription)")
@@ -599,7 +612,7 @@ extension HomeController : CLLocationManagerDelegate{
         }
         
         if region.identifier == AnnotaionType.destination.rawValue {
-            Service.shared.updateTripState(trip: trip, state: .arrivedDestination) { (error) in
+            DriverService.shared.updateTripState(trip: trip, state: .arrivedDestination) { (error) in
                 
                 if error != nil {
                     print("Can't update \(error!.localizedDescription)")
@@ -616,7 +629,7 @@ extension HomeController : CLLocationManagerDelegate{
     
 }
 
-//MARK: Activation VIew Delegate
+//MARK: - Activation VIew Delegate
 
 extension HomeController : LocationInputActivationViewDelegate {
     
@@ -627,7 +640,7 @@ extension HomeController : LocationInputActivationViewDelegate {
     
 }
 
-//MARK: InputVIew Delegate
+//MARK: - InputVIew Delegate
 
 extension HomeController : LocationInputViewDelegate {
     
@@ -675,7 +688,7 @@ extension HomeController : LocationInputViewDelegate {
     
 }
 
-//MARK: tableView delegate
+//MARK: - tableView delegate
 
 extension HomeController : UITableViewDelegate, UITableViewDataSource {
     
@@ -782,7 +795,7 @@ extension HomeController : UITableViewDelegate, UITableViewDataSource {
     
 }
 
-//MARK: PickupCOntroller Delegate
+//MARK: - PickupCOntroller Delegate
 
 extension HomeController : PickupControllerDelegate {
     
@@ -803,15 +816,8 @@ extension HomeController : PickupControllerDelegate {
         
         // check trip has Cancel
         
-        Service.shared.observeTripCancelled(trip: trip) { (exist) in
-            if !exist {
-                self.removeAnnotaionsandOverlays()
-                self.animateRideActionView(shoudShow: false)
-                self.centerMapOnUserLocation()
-            }
-        }
-        
-        
+       observeCancelTrip(trip: trip)
+     
         
         Service.shared.fetchUserData(uid: trip.passangerUId) { (passanger) in
             self.animateRideActionView(shoudShow: true, config: .tripAccepted, user: passanger)
@@ -831,7 +837,7 @@ extension HomeController : RideActionViewDelegate {
         // Indicator View
         shouldPresentLoadingView(true, message: "Finding you a ride...")
         
-        Service.shared.uploadTrip(pickupCoodinates, desitinationCoodinates: destinationCoodinates) { (error) in
+        PassangerService.shared.uploadTrip(pickupCoodinates, desitinationCoodinates: destinationCoodinates) { (error) in
             
             if error != nil {
                 print(error?.localizedDescription)
@@ -850,7 +856,7 @@ extension HomeController : RideActionViewDelegate {
     func cancelTrip() {
         
         // delete Trip
-        Service.shared.deleteTrip { (error) in
+        PassangerService.shared.deleteTrip { (error) in
             
             if error != nil {
                 print("Couldn't delete Trip")
@@ -879,7 +885,7 @@ extension HomeController : RideActionViewDelegate {
     func dropOffPassanger() {
         
         guard let trip = self.trip else {return}
-        Service.shared.updateTripState(trip: trip, state: .completed) { (error) in
+        DriverService.shared.updateTripState(trip: trip, state: .completed) { (error) in
             if error != nil {
                 print("Couldn't Complete")
                 return

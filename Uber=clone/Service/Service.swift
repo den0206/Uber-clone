@@ -11,79 +11,11 @@ import Firebase
 import CoreLocation
 import Geofirestore
 
-class Service {
+//MARK: - Driver Service
+
+struct DriverService {
     
-    static let shared = Service()
-   
-    
-    //MARK: Get current User
-    
-    func fetchUserData(uid : String, completion : @escaping(FUser) -> Void){
-//        guard let currentId = Auth.auth().currentUser?.uid else {return}
-        
-        firebaseReferences(.User).document(uid).getDocument { (snapshot, error) in
-            guard let snapshot = snapshot else {return}
-            
-            if snapshot.exists {
-                guard let dictionary = snapshot.data() as? [String : Any] else {return}
-                let userId = snapshot.documentID
-                let user = FUser(_uid: userId, dictionary: dictionary)
-                completion(user)
-                
-            }
-        }
-    }
-    
-    
-    
-    func fetchDrivers(location : CLLocation , completion : @escaping(FUser) -> Void) {
-        let geoFire = GeoFirestore(collectionRef: firebaseReferences(.Driver_Location))
-        
-        firebaseReferences(.Driver_Location).getDocuments { (snapshot, error) in
-            
-            
-//            guard let snapshot = snapshot else {return}
-            geoFire.query(withCenter: location, radius: 1000).observe(.documentEntered) { (uid, location) in
-                if let uid = uid, let location = location {
-                    self.fetchUserData(uid: uid) { (user) in
-                        var driver = user
-                        driver.location = location
-                        completion(driver)
-                    }
-                }
-            }
-            
-            geoFire.query(withCenter: location, radius: 1000).observe(.documentMoved) { (uid, location) in
-                if let uid = uid, let location = location {
-                    self.fetchUserData(uid: uid) { (user) in
-                        var driver = user
-                        driver.location = location
-                        completion(driver)
-                    }
-                }
-            }
-        }
-    }
-    
-    func uploadTrip(_ pickurCoodinates : CLLocationCoordinate2D, desitinationCoodinates : CLLocationCoordinate2D, completion : @escaping(Error?) -> Void) {
-        
-        guard let uid = Auth.auth().currentUser?.uid else {return}
-        
-        let picupArray = [pickurCoodinates.latitude, pickurCoodinates.longitude]
-        let destinationArray = [desitinationCoodinates.latitude, desitinationCoodinates.longitude ]
-        
-        let values = [kPICKUPCOODINATES : picupArray,
-                      kDESTINATONCOODINATES : destinationArray,
-                      kSTATE : TripState.requested.rawValue
-            
-                     ] as [String : Any]
-        
-        firebaseReferences(.Trip).document(uid).setData(values) { (error) in
-            
-            completion(error)
-        }
-    }
-    
+    static let shared = DriverService()
     
     func obserebeTrip(completion : @escaping(Trip) -> Void) {
         firebaseReferences(.Trip).addSnapshotListener { (snapshot, error) in
@@ -106,7 +38,7 @@ class Service {
                         completion(trip)
                     }
                     
-                   
+                    
                 }
                 
             }
@@ -126,31 +58,91 @@ class Service {
         }
     }
     
+    func updateDriverLocation(location : CLLocation) {
+        guard let uid = Auth.auth().currentUser?.uid else {return}
+        
+        let geofire = GeoFirestore(collectionRef: firebaseReferences(.Driver_Location))
+        geofire.setLocation(location: location, forDocumentWithID: uid)
+    }
     
-//    func acceptTrip(trip : Trip, completion : @escaping(Error?) -> Void) {
-//
-//        guard let currentUid = Auth.auth().currentUser?.uid else {return}
-//        let values = [kDRIVAERUID : currentUid,
-//                      kSTATE : TripState.accepted.rawValue] as [String : Any]
-//
-//        firebaseReferences(.Trip).document(trip.passangerUId).updateData(values) { (error) in
-//            if error != nil {
-//                completion(error)
-//            }
-//        }
-//    }
+    
+    func updateTripState(trip : Trip, state : TripState, completion : @escaping(Error?) -> Void) {
+        
+        firebaseReferences(.Trip).document(trip.passangerUId).updateData([kSTATE : state.rawValue]) { (error) in
+            
+            if error != nil {
+                completion(error)
+                return
+            }
+        }
+        
+        //        if state == .completed {
+        //            firebaseReferences(.Trip).document(trip.passangerUId)
+        //        }
+    }
+}
+
+//MARK: - Passanger Service
+
+struct PassangerService {
+    static let shared = PassangerService()
+    
+    func fetchDrivers(location : CLLocation , completion : @escaping(FUser) -> Void) {
+        let geoFire = GeoFirestore(collectionRef: firebaseReferences(.Driver_Location))
+        
+        firebaseReferences(.Driver_Location).getDocuments { (snapshot, error) in
+            
+            
+            //            guard let snapshot = snapshot else {return}
+            geoFire.query(withCenter: location, radius: 1000).observe(.documentEntered) { (uid, location) in
+                if let uid = uid, let location = location {
+                    Service.shared.fetchUserData(uid: uid) { (user) in
+                        var driver = user
+                        driver.location = location
+                        completion(driver)
+                    }
+                }
+            }
+            
+            geoFire.query(withCenter: location, radius: 1000).observe(.documentMoved) { (uid, location) in
+                if let uid = uid, let location = location {
+                    Service.shared.fetchUserData(uid: uid) { (user) in
+                        var driver = user
+                        driver.location = location
+                        completion(driver)
+                    }
+                }
+            }
+        }
+    }
+    
+    func uploadTrip(_ pickurCoodinates : CLLocationCoordinate2D, desitinationCoodinates : CLLocationCoordinate2D, completion : @escaping(Error?) -> Void) {
+        
+        guard let uid = Auth.auth().currentUser?.uid else {return}
+        
+        let picupArray = [pickurCoodinates.latitude, pickurCoodinates.longitude]
+        let destinationArray = [desitinationCoodinates.latitude, desitinationCoodinates.longitude ]
+        
+        let values = [kPICKUPCOODINATES : picupArray,
+                      kDESTINATONCOODINATES : destinationArray,
+                      kSTATE : TripState.requested.rawValue
+            
+            ] as [String : Any]
+        
+        firebaseReferences(.Trip).document(uid).setData(values) { (error) in
+            
+            completion(error)
+        }
+    }
     
     func acceptTrip(trip : Trip) {
-          
-          guard let currentUid = Auth.auth().currentUser?.uid else {return}
-          let values = [kDRIVAERUID : currentUid,
-                        kSTATE : TripState.accepted.rawValue] as [String : Any]
-          
-          firebaseReferences(.Trip).document(trip.passangerUId).updateData(values)
-      }
-      
-    
-    // for passanger
+        
+        guard let currentUid = Auth.auth().currentUser?.uid else {return}
+        let values = [kDRIVAERUID : currentUid,
+                      kSTATE : TripState.accepted.rawValue] as [String : Any]
+        
+        firebaseReferences(.Trip).document(trip.passangerUId).updateData(values)
+    }
     
     func observeCurrentTrip(completion : @escaping(Trip) -> Void) {
         
@@ -177,27 +169,31 @@ class Service {
         }
     }
     
-    func updateDriverLocation(location : CLLocation) {
-        guard let uid = Auth.auth().currentUser?.uid else {return}
-        
-        let geofire = GeoFirestore(collectionRef: firebaseReferences(.Driver_Location))
-        geofire.setLocation(location: location, forDocumentWithID: uid)
-    }
     
-    // update State
+}
+
+class Service {
     
-    func updateTripState(trip : Trip, state : TripState, completion : @escaping(Error?) -> Void) {
+    static let shared = Service()
+    
+    
+    //MARK: Get current User
+    
+    func fetchUserData(uid : String, completion : @escaping(FUser) -> Void){
+//        guard let currentId = Auth.auth().currentUser?.uid else {return}
         
-        firebaseReferences(.Trip).document(trip.passangerUId).updateData([kSTATE : state.rawValue]) { (error) in
+        firebaseReferences(.User).document(uid).getDocument { (snapshot, error) in
+            guard let snapshot = snapshot else {return}
             
-            if error != nil {
-                completion(error)
-                return
+            if snapshot.exists {
+                guard let dictionary = snapshot.data() as? [String : Any] else {return}
+                let userId = snapshot.documentID
+                let user = FUser(_uid: userId, dictionary: dictionary)
+                completion(user)
+                
             }
         }
-        
-//        if state == .completed {
-//            firebaseReferences(.Trip).document(trip.passangerUId)
-//        }
     }
+    
+
 }
