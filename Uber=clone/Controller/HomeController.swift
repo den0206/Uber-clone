@@ -26,6 +26,12 @@ private enum AnnotaionType : String {
     case destination
 }
 
+// for Side Menu
+
+protocol HomeControllerDelegate : class {
+    func handleMenuTpggle()
+}
+
 class HomeController : UIViewController {
     
     private let mapview = MKMapView()
@@ -33,6 +39,8 @@ class HomeController : UIViewController {
     private let rideActionView = RideActionView()
     private let inputActivationView = LocationInputActivationView()
     private let locationInputView = LocationInputView()
+    
+    weak var delegate : HomeControllerDelegate?
     
     private var user : FUser? {
         didSet {
@@ -272,7 +280,9 @@ class HomeController : UIViewController {
         
         switch actionButtonConfigure {
         case .showMenu:
-            print("SideMenu")
+            // container Controller
+            delegate?.handleMenuTpggle()
+            
         case .dismissActionView :
             
             removeAnnotaionsandOverlays()

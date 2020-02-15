@@ -18,6 +18,9 @@
 		3AC29B9D23ED946300C5CB06 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3AC29B9C23ED946300C5CB06 /* GoogleService-Info.plist */; };
 		3AC682B723F2558800307AA7 /* RideActionVIew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC682B623F2558800307AA7 /* RideActionVIew.swift */; };
 		3ACB83AE23EFB7BA00ECCCAC /* DriverAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACB83AD23EFB7BA00ECCCAC /* DriverAnnotation.swift */; };
+		3AD30D6E23F81E1A00B67516 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD30D6D23F81E1A00B67516 /* Menu.swift */; };
+		3AD30D7023F81E3B00B67516 /* ContainerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD30D6F23F81E3B00B67516 /* ContainerController.swift */; };
+		3AD30D7223F8248A00B67516 /* SidemenuHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD30D7123F8248A00B67516 /* SidemenuHeader.swift */; };
 		3AD4E7A823EE608900FF496D /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD4E7A723EE608900FF496D /* HomeController.swift */; };
 		3AD836E323EE40AE00BB9505 /* Reference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD836E223EE40AE00BB9505 /* Reference.swift */; };
 		3AD836E523EE43A100BB9505 /* Constracts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD836E423EE43A100BB9505 /* Constracts.swift */; };
@@ -44,6 +47,9 @@
 		3AC29B9C23ED946300C5CB06 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3AC682B623F2558800307AA7 /* RideActionVIew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RideActionVIew.swift; sourceTree = "<group>"; };
 		3ACB83AD23EFB7BA00ECCCAC /* DriverAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverAnnotation.swift; sourceTree = "<group>"; };
+		3AD30D6D23F81E1A00B67516 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
+		3AD30D6F23F81E3B00B67516 /* ContainerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerController.swift; sourceTree = "<group>"; };
+		3AD30D7123F8248A00B67516 /* SidemenuHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidemenuHeader.swift; sourceTree = "<group>"; };
 		3AD4E7A723EE608900FF496D /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
 		3AD836E223EE40AE00BB9505 /* Reference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reference.swift; sourceTree = "<group>"; };
 		3AD836E423EE43A100BB9505 /* Constracts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constracts.swift; sourceTree = "<group>"; };
@@ -91,6 +97,24 @@
 				8161FD089A431FAAEC6CC17D /* Pods_Uber_clone.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3AD30D6B23F81DD700B67516 /* Authentification */ = {
+			isa = PBXGroup;
+			children = (
+				3AF99BD823EC364C00BBDF38 /* LoginController.swift */,
+				3A5A7ECE23ED82DB007A0A90 /* SignupController.swift */,
+			);
+			path = Authentification;
+			sourceTree = "<group>";
+		};
+		3AD30D6C23F81E0400B67516 /* Side Menu */ = {
+			isa = PBXGroup;
+			children = (
+				3AD30D6D23F81E1A00B67516 /* Menu.swift */,
+				3AD30D6F23F81E3B00B67516 /* ContainerController.swift */,
+			);
+			path = "Side Menu";
 			sourceTree = "<group>";
 		};
 		3AF1A5CF23EE98FD00D06F51 /* Cell */ = {
@@ -156,6 +180,7 @@
 				3AF1A5C923EE7FDA00D06F51 /* LocationInputActivationView.swift */,
 				3AF1A5CB23EE87C000D06F51 /* LocationInputView.swift */,
 				3AC682B623F2558800307AA7 /* RideActionVIew.swift */,
+				3AD30D7123F8248A00B67516 /* SidemenuHeader.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -163,8 +188,8 @@
 		3AF99BD523EC358400BBDF38 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				3AF99BD823EC364C00BBDF38 /* LoginController.swift */,
-				3A5A7ECE23ED82DB007A0A90 /* SignupController.swift */,
+				3AD30D6B23F81DD700B67516 /* Authentification */,
+				3AD30D6C23F81E0400B67516 /* Side Menu */,
 				3AD4E7A723EE608900FF496D /* HomeController.swift */,
 				3A22A7D223F29A6A0056A1D4 /* PickupController.swift */,
 			);
@@ -306,6 +331,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3AD30D7223F8248A00B67516 /* SidemenuHeader.swift in Sources */,
 				3A6F0A8B23EF90590053B45F /* LocationHandler.swift in Sources */,
 				3AF1A5CA23EE7FDA00D06F51 /* LocationInputActivationView.swift in Sources */,
 				3AAA403423EEEBF5003A1F9B /* Service.swift in Sources */,
@@ -317,9 +343,11 @@
 				3AF99BD923EC364C00BBDF38 /* LoginController.swift in Sources */,
 				3ACB83AE23EFB7BA00ECCCAC /* DriverAnnotation.swift in Sources */,
 				3AF1A5D123EEA32500D06F51 /* LocationCell.swift in Sources */,
+				3AD30D7023F81E3B00B67516 /* ContainerController.swift in Sources */,
 				3AF99BC223EC355800BBDF38 /* SceneDelegate.swift in Sources */,
 				3A0ADA5F23F282ED00DE3A76 /* Trip.swift in Sources */,
 				3AD4E7A823EE608900FF496D /* HomeController.swift in Sources */,
+				3AD30D6E23F81E1A00B67516 /* Menu.swift in Sources */,
 				3A5A7ECF23ED82DB007A0A90 /* SignupController.swift in Sources */,
 				3A22A7D323F29A6A0056A1D4 /* PickupController.swift in Sources */,
 				3AF99BDB23EC3AA900BBDF38 /* Extensions.swift in Sources */,
