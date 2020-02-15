@@ -171,11 +171,16 @@ class HomeController : UIViewController {
     }
     
     func observeCurrentTrip() {
+        
         Service.shared.observeCurrentTrip { (trip) in
             self.trip = trip
+            guard let state = trip.state else {return}
             
-            
-            if trip.state == .accepted {
+            switch state {
+                
+            case .requested:
+                break
+            case .accepted:
                 // dismiss Indicator
                 self.shouldPresentLoadingView(false)
                 
@@ -186,9 +191,16 @@ class HomeController : UIViewController {
                 Service.shared.fetchUserData(uid: drierUid) { (driver) in
                     self.animateRideActionView(shoudShow: true, config: .tripAccepted, user: driver)
                 }
-
+                
+            case .driverArrived:
+                self.rideActionView.config = .driverArrived
+            case .inProgress:
+                break
+            case .completed:
+                break
                 
             }
+            
         }
     }
     
@@ -335,7 +347,7 @@ class HomeController : UIViewController {
                 rideActionView.user = user
             }
             
-            rideActionView.configureUI(withconfig: config)
+            rideActionView.config = config
         } else {
             UIView.animate(withDuration: 0.3) {
                 self.rideActionView.frame.origin.y = self.view.frame.height
@@ -416,11 +428,20 @@ private extension HomeController {
         let region = MKCoordinateRegion(center: coodinate, latitudinalMeters: 2000, longitudinalMeters: 2000)
         mapview.setRegion(region, animated: true)
     }
+    
+    func setCustomUserRegion(withCoodinates coodenates : CLLocationCoordinate2D) {
+        let region = CLCircularRegion(center: coodenates, radius: 25, identifier: "pickup")
+        locationManager?.startMonitoring(for: region)
+        
+        print("\(region)")
+    }
+    
 }
 
 //MARK: Mapview delegate
 
 extension HomeController : MKMapViewDelegate {
+    
     
     //MARK: ANnotaion
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -447,11 +468,24 @@ extension HomeController : MKMapViewDelegate {
         
         return MKOverlayRenderer()
     }
+    
+    // Real time User Locaction
+    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+        guard  let user = self.user else {return}
+        guard  user.accountType == .driver else {return}
+        guard let location = userLocation.location else {return}
+        
+        Service.shared.updateDriverLocation(location: location)
+    }
+    
 }
 
-extension HomeController {
+
+extension HomeController : CLLocationManagerDelegate{
     
     func enableLocationaService() {
+        
+        locationManager?.delegate = self
         
         switch CLLocationManager.authorizationStatus() {
         case .notDetermined:
@@ -469,6 +503,20 @@ extension HomeController {
         }
     }
     
+    // locationManager delegate
+    
+    func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion) {
+        print("\(region)")
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
+        print("passanger region")
+        
+        self.rideActionView.config = .pickupPassanger
+        
+        guard let trip = self.trip else {return}
+        Service.shared.updateTripState(trip: trip, state: .driverArrived)
+    }
     
 }
 
@@ -655,6 +703,8 @@ extension HomeController : PickupControllerDelegate {
         mapview.addAnnotation(anno)
         mapview.selectAnnotation(anno, animated: true)
         
+        self.setCustomUserRegion(withCoodinates: trip.pickupCoodinates)
+        
         let placeMark = MKPlacemark(coordinate: trip.pickupCoodinates)
         let mapItem = MKMapItem(placemark: placeMark)
         
@@ -728,6 +778,8 @@ extension HomeController : RideActionViewDelegate {
             // return Show Menu
             self.actionButton.setImage(#imageLiteral(resourceName: "baseline_menu_black_36dp").withRenderingMode(.alwaysOriginal), for: .normal)
             self.actionButtonConfigure = .showMenu
+            
+            self.locationInputView.alpha = 1
             
             
         }

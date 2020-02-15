@@ -172,4 +172,17 @@ class Service {
             completion(error)
         }
     }
+    
+    func updateDriverLocation(location : CLLocation) {
+        guard let uid = Auth.auth().currentUser?.uid else {return}
+        
+        let geofire = GeoFirestore(collectionRef: firebaseReferences(.Driver_Location))
+        geofire.setLocation(location: location, forDocumentWithID: uid)
+    }
+    
+    // update State
+    
+    func updateTripState(trip : Trip, state : TripState) {
+        firebaseReferences(.Trip).document(trip.passangerUId).updateData([kSTATE : state.rawValue])
+    }
 }
