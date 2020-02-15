@@ -182,7 +182,14 @@ class Service {
     
     // update State
     
-    func updateTripState(trip : Trip, state : TripState) {
-        firebaseReferences(.Trip).document(trip.passangerUId).updateData([kSTATE : state.rawValue])
+    func updateTripState(trip : Trip, state : TripState, completion : @escaping(Error?) -> Void) {
+        
+        firebaseReferences(.Trip).document(trip.passangerUId).updateData([kSTATE : state.rawValue]) { (error) in
+            
+            if error != nil {
+                completion(error)
+                return
+            }
+        }
     }
 }
