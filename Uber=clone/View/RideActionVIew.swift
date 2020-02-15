@@ -15,6 +15,7 @@ protocol RideActionViewDelegate : class{
     func uploadTrip(_ view : RideActionView)
     func cancelTrip()
     func pickUpPassanger()
+    func dropOffPassanger()
 }
 
 enum RidectionViewConfiguration {
@@ -203,7 +204,7 @@ class RideActionView: UIView {
         case .pickUp:
             delegate?.pickUpPassanger()
         case .dropOff:
-            print("Drop OFf")
+            delegate?.dropOffPassanger()
         }
     }
     
@@ -262,13 +263,14 @@ class RideActionView: UIView {
             guard let user = user else {return}
             
             if user.accountType == .driver {
-                actionButton.setTitle("End Of TRIP", for: .normal)
+                actionButton.setTitle("Arrived Ad Destination", for: .normal)
                 actionButton.isEnabled = false
             } else {
                 buttonAction = .dropOff
                 actionButton.setTitle(buttonAction.description, for: .normal)
             }
             
+            titleLabel.text = "Arrived Ad Destination"
         
         }
     }

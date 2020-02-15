@@ -114,6 +114,10 @@ class Service {
     }
     
     func observeTripCancelled(trip : Trip, completion : @escaping(Bool) -> Void) {
+        
+        // except When Complete
+        
+        
         firebaseReferences(.Trip).document(trip.passangerUId).getDocument { (snapshot, error) in
             guard let snapshot = snapshot else {return}
             
@@ -164,7 +168,7 @@ class Service {
         }
     }
     
-    func cancelTrip(completion : @escaping(Error?) -> Void) {
+    func deleteTrip(completion : @escaping(Error?) -> Void) {
         
         guard let uid = Auth.auth().currentUser?.uid else {return}
         
@@ -191,5 +195,9 @@ class Service {
                 return
             }
         }
+        
+//        if state == .completed {
+//            firebaseReferences(.Trip).document(trip.passangerUId)
+//        }
     }
 }

@@ -205,9 +205,20 @@ class HomeController : UIViewController {
                 self.rideActionView.config = .driverArrived
             case .inProgress:
                 self.rideActionView.config = .tripInProgress
+            case .arrivedDestination :
+                self.rideActionView.config = .endTrip
             case .completed:
-                break
-                
+              
+                // Complete!
+                Service.shared.deleteTrip { (error) in
+                    self.animateRideActionView(shoudShow: false)
+                    self.centerMapOnUserLocation()
+                    self.inputActivationView.alpha = 1
+                    // return Show Menu
+                    self.configureActionButton(config: .showMenu)
+                    self.presentAlertController(withTitle: "Complete!", withMessage: "Thanks For Use")
+                    
+                }
             }
             
         }
@@ -237,6 +248,8 @@ class HomeController : UIViewController {
             self.setCustomUserRegion(withType: .destination, withCoodinates: trip.destinationCoodenates)
             
             self.generatePolyLine(toDestination: mapItem)
+            
+            self.mapview.zoomToFit(annotations: self.mapview.annotations)
         }
     }
     
@@ -570,17 +583,35 @@ extension HomeController : CLLocationManagerDelegate{
     }
     
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
-        print("passanger region")
         
+        print("passanger region")
         guard let trip = self.trip else {return}
-        Service.shared.updateTripState(trip: trip, state: .driverArrived) { (error) in
-            
-            if error != nil {
-                print("Can't update \(error!.localizedDescription)")
+        
+        if region.identifier == AnnotaionType.pickUp.rawValue {
+            Service.shared.updateTripState(trip: trip, state: .driverArrived) { (error) in
+                
+                if error != nil {
+                    print("Can't update \(error!.localizedDescription)")
+                }
+                
+                self.rideActionView.config = .pickupPassanger
             }
-            
-            self.rideActionView.config = .pickupPassanger
         }
+        
+        if region.identifier == AnnotaionType.destination.rawValue {
+            Service.shared.updateTripState(trip: trip, state: .arrivedDestination) { (error) in
+                
+                if error != nil {
+                    print("Can't update \(error!.localizedDescription)")
+                }
+                self.rideActionView.config = .endTrip
+            }
+        }
+        
+        
+        
+        
+        
     }
     
 }
@@ -792,8 +823,7 @@ extension HomeController : PickupControllerDelegate {
 }
 
 extension HomeController : RideActionViewDelegate {
-   
-    
+
     func uploadTrip(_ view: RideActionView) {
         guard let pickupCoodinates = locationManager?.location?.coordinate else {return}
         guard let destinationCoodinates = view.destination?.coordinate else {return}
@@ -820,7 +850,7 @@ extension HomeController : RideActionViewDelegate {
     func cancelTrip() {
         
         // delete Trip
-        Service.shared.cancelTrip { (error) in
+        Service.shared.deleteTrip { (error) in
             
             if error != nil {
                 print("Couldn't delete Trip")
@@ -844,6 +874,24 @@ extension HomeController : RideActionViewDelegate {
     
     func pickUpPassanger() {
         startTrip()
+    }
+    
+    func dropOffPassanger() {
+        
+        guard let trip = self.trip else {return}
+        Service.shared.updateTripState(trip: trip, state: .completed) { (error) in
+            if error != nil {
+                print("Couldn't Complete")
+                return
+            }
+            
+            // Complete!!
+            self.removeAnnotaionsandOverlays()
+            self.centerMapOnUserLocation()
+            self.animateRideActionView(shoudShow: false)
+            
+            
+        }
     }
     
 
