@@ -34,6 +34,8 @@
 		3AF99BCC23EC355A00BBDF38 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3AF99BCA23EC355A00BBDF38 /* LaunchScreen.storyboard */; };
 		3AF99BD923EC364C00BBDF38 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF99BD823EC364C00BBDF38 /* LoginController.swift */; };
 		3AF99BDB23EC3AA900BBDF38 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF99BDA23EC3AA900BBDF38 /* Extensions.swift */; };
+		3AFE463B23F92CE50082A5A5 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFE463A23F92CE50082A5A5 /* SettingsController.swift */; };
+		3AFE463D23F930E90082A5A5 /* UserInfoHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFE463C23F930E90082A5A5 /* UserInfoHeader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -65,6 +67,8 @@
 		3AF99BCD23EC355A00BBDF38 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3AF99BD823EC364C00BBDF38 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		3AF99BDA23EC3AA900BBDF38 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		3AFE463A23F92CE50082A5A5 /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
+		3AFE463C23F930E90082A5A5 /* UserInfoHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoHeader.swift; sourceTree = "<group>"; };
 		432297FE75B166A90E378BC2 /* Pods-Uber=clone.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uber=clone.release.xcconfig"; path = "Target Support Files/Pods-Uber=clone/Pods-Uber=clone.release.xcconfig"; sourceTree = "<group>"; };
 		8161FD089A431FAAEC6CC17D /* Pods_Uber_clone.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Uber_clone.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6EC5441988F82044B3FC9D8 /* Pods-Uber=clone.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uber=clone.debug.xcconfig"; path = "Target Support Files/Pods-Uber=clone/Pods-Uber=clone.debug.xcconfig"; sourceTree = "<group>"; };
@@ -113,6 +117,7 @@
 			children = (
 				3AD30D6D23F81E1A00B67516 /* Menu.swift */,
 				3AD30D6F23F81E3B00B67516 /* ContainerController.swift */,
+				3AFE463A23F92CE50082A5A5 /* SettingsController.swift */,
 			);
 			path = "Side Menu";
 			sourceTree = "<group>";
@@ -181,6 +186,7 @@
 				3AF1A5CB23EE87C000D06F51 /* LocationInputView.swift */,
 				3AC682B623F2558800307AA7 /* RideActionVIew.swift */,
 				3AD30D7123F8248A00B67516 /* SidemenuHeader.swift */,
+				3AFE463C23F930E90082A5A5 /* UserInfoHeader.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -350,7 +356,9 @@
 				3AD30D6E23F81E1A00B67516 /* Menu.swift in Sources */,
 				3A5A7ECF23ED82DB007A0A90 /* SignupController.swift in Sources */,
 				3A22A7D323F29A6A0056A1D4 /* PickupController.swift in Sources */,
+				3AFE463D23F930E90082A5A5 /* UserInfoHeader.swift in Sources */,
 				3AF99BDB23EC3AA900BBDF38 /* Extensions.swift in Sources */,
+				3AFE463B23F92CE50082A5A5 /* SettingsController.swift in Sources */,
 				3AD836E523EE43A100BB9505 /* Constracts.swift in Sources */,
 				3AF1A5CC23EE87C000D06F51 /* LocationInputView.swift in Sources */,
 			);

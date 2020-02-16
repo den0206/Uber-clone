@@ -184,7 +184,19 @@ extension ContainerController : MenuControllerDelegate {
             case .yourTrip :
                 break
             case.settings :
-                break
+                
+                guard let user = self.user else {return}
+                
+                let settingVC = SettingViewController(user: user)
+                
+                let nav = UINavigationController(rootViewController: settingVC)
+                
+                if #available(iOS 13.0, *) {
+                    nav.modalPresentationStyle = .fullScreen
+                }
+                
+                self.present(nav, animated: true, completion: nil)
+                
             case.logout :
                 let alert = UIAlertController(title: nil, message: "Are you Log out", preferredStyle: .actionSheet)
                 
