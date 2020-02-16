@@ -188,7 +188,7 @@ class SignupController: UIViewController {
                 print(error!.localizedDescription)
             }
             
-            guard let contrroller = UIApplication.shared.keyWindow?.rootViewController as? HomeController else {return}
+            guard let contrroller = UIApplication.shared.keyWindow?.rootViewController as? ContainerController else {return}
             contrroller.configure()
             self.dismiss(animated: true, completion: nil)
         }

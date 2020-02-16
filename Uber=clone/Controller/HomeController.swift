@@ -42,9 +42,12 @@ class HomeController : UIViewController {
     
     weak var delegate : HomeControllerDelegate?
     
-    private var user : FUser? {
+    var user : FUser? {
         didSet {
-            if user?.accountType == .passanger {
+            guard let user = user else {return}
+            self.locationInputView.titleLabel.text = user.fullname
+            
+            if user.accountType == .passanger {
                 fetchDrivers()
                 configureLocationActivationView()
                 // for passanger
@@ -104,8 +107,9 @@ class HomeController : UIViewController {
         
         navigationController?.navigationBar.isHidden = true
         // check Login
-        checkUserIsLogin()
+        
         enableLocationaService()
+        configureUI()
         
         
        
@@ -122,31 +126,8 @@ class HomeController : UIViewController {
     
     //MARK: - API
     
-    private func checkUserIsLogin() {
-        
-        if Auth.auth().currentUser?.uid == nil {
-            // aync
-            DispatchQueue.main.async {
-                let nav = UINavigationController(rootViewController: LoginViewController())
-                if #available(iOS 13.0, *) {
-                    nav.isModalInPresentation = true
-                }
-                nav.modalPresentationStyle = .fullScreen
-                self.present(nav, animated: true, completion: nil)
-            }
-        } else {
-            configure()
-        } 
-    }
+   
     
-    func fetchUserData() {
-        guard let currentid = Auth.auth().currentUser?.uid else {return}
-        Service.shared.fetchUserData(uid: currentid) { (user) in
-            self.locationInputView.titleLabel.text = user.fullname
-            self.user = user
-            
-        }
-    }
     func fetchDrivers() {
         // throw if user is passanger
 //        guard user?.accountType == .passanger else {
@@ -303,28 +284,8 @@ class HomeController : UIViewController {
         }
     }
     
-    private func signOut() {
-        do {
-            try Auth.auth().signOut()
-            // aync
-            DispatchQueue.main.async {
-                let nav = UINavigationController(rootViewController: LoginViewController())
-                if #available(iOS 13.0, *) {
-                    nav.isModalInPresentation = true
-                }
-                nav.modalPresentationStyle = .fullScreen
-                self.present(nav, animated: true, completion: nil)
-            }
-        } catch {
-            print("can't Sign Out")
-        }
-    }
-    
-    func configure() {
-        configureUI()
-        fetchUserData()
-//        fetchDrivers()
-    }
+   
+
     
     //MARK: - Helpers
     

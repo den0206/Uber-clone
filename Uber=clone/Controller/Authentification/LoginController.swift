@@ -116,7 +116,7 @@ class LoginViewController: UIViewController {
                 return
             }
             
-            guard let controller = SceneDelegate.shared?.window?.rootViewController as? HomeController else { return }
+            guard let controller = SceneDelegate.shared?.window?.rootViewController as? ContainerController else { return }
             
             controller.configure()
             self.dismiss(animated: true, completion: nil)
