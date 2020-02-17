@@ -169,6 +169,19 @@ struct PassangerService {
         }
     }
     
+    func saveLocation(locationString : String, type : LocationType, completion : @escaping(Error?) -> Void) {
+        
+        guard let uid = Auth.auth().currentUser?.uid else {return}
+        let key : String = type == .home ? kHOMELOCATION : kWORKLOCATION
+        
+        
+        firebaseReferences(.User).document(uid).updateData([key : locationString]) { (error) in
+            if error != nil {
+                completion(error)
+            }
+        }
+    }
+    
     
 }
 

@@ -32,3 +32,6 @@ public let kPICKUPCOODINATES = "picupCoodinates"
 public let kDESTINATONCOODINATES = "destinationCoodinates"
 public let kDRIVAERUID = "driverUid"
 public let kSTATE = "state"
+
+public let kHOMELOCATION = "homeLocation"
+public let kWORKLOCATION = "workLocation"

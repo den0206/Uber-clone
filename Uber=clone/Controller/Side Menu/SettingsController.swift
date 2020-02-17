@@ -41,6 +41,7 @@ enum LocationType : Int, CaseIterable, CustomStringConvertible {
 class SettingViewController: UITableViewController {
     
     private let user : FUser
+    private let locationManager = LocationHandler.shared.locationManager
     
     private lazy var infoHeader : UserInfoHeader = {
         let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 100)
@@ -70,6 +71,7 @@ class SettingViewController: UITableViewController {
         tableView.register(LocationCell.self, forCellReuseIdentifier: reuserIdentifier)
         tableView.backgroundColor = .white
         tableView.tableHeaderView = infoHeader
+        tableView.tableFooterView = UIView()
     }
     
     func configureNavigationController() {
@@ -137,9 +139,36 @@ extension SettingViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         
         guard let type = LocationType(rawValue: indexPath.row) else {return}
-        print(type.description)
+        guard let location = locationManager?.location else {return}
+        
+        let controller = AddlocationController(type: type, location: location)
+        controller.delegate = self
+        let nav = UINavigationController(rootViewController: controller)
         
         
+        if #available(iOS 13.0, *) {
+            nav.modalPresentationStyle = .fullScreen
+        }
+        
+        present(nav, animated: true, completion: nil)
+        
+        
+    }
+    
+    
+}
+
+//MARK: - Addlocation Controller delegate
+extension SettingViewController : AddlocationContollerDelegate {
+    
+    func updateLocation(locationString: String, type: LocationType) {
+        PassangerService.shared.saveLocation(locationString: locationString, type: type) { (error) in
+            
+            if error != nil {
+                print("Can't Save location")
+            }
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     
     
