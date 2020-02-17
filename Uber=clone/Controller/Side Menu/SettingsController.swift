@@ -40,7 +40,7 @@ enum LocationType : Int, CaseIterable, CustomStringConvertible {
 
 class SettingViewController: UITableViewController {
     
-    private let user : FUser
+    private var user : FUser
     private let locationManager = LocationHandler.shared.locationManager
     
     private lazy var infoHeader : UserInfoHeader = {
@@ -91,6 +91,17 @@ class SettingViewController: UITableViewController {
         self.dismiss(animated: true, completion: nil)
     }
     
+    func locationText(type : LocationType) -> String{
+        
+        switch type {
+        case .home:
+            return user.homeLocation ?? type.subtitle
+        case .work :
+            return user.workLocation ?? type.subtitle
+        
+        }
+    }
+    
 }
 
 //MARK: - TableView Delegate
@@ -105,7 +116,8 @@ extension SettingViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuserIdentifier, for: indexPath) as! LocationCell
         
         guard let type = LocationType(rawValue: indexPath.row) else {return cell }
-        cell.type = type
+        cell.titleLable.text = type.description
+        cell.addresslabel.text = locationText(type: type)
         
         return cell
     }
@@ -168,6 +180,15 @@ extension SettingViewController : AddlocationContollerDelegate {
                 print("Can't Save location")
             }
             self.dismiss(animated: true, completion: nil)
+            
+            switch type {
+            case .home :
+                self.user.homeLocation = locationString
+            case .work :
+                self.user.workLocation = locationString
+            }
+            
+            self.tableView.reloadData()
         }
     }
     

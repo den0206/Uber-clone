@@ -103,7 +103,9 @@ extension AddlocationController {
         let title = result.title
         let subTitle = result.subtitle
         let locationString = title + " " + subTitle
-        delegate?.updateLocation(locationString: locationString, type: type)
+        // replace String
+        let trim = locationString.replacingOccurrences(of: ", Japan", with: "")
+        delegate?.updateLocation(locationString: trim, type: type)
     }
     
 }
