@@ -175,6 +175,14 @@ extension ContainerController : HomeControllerDelegate {
     
 }
 
+extension ContainerController : SettingsControllerDelegate {
+    func updateUser(_ controller: SettingViewController) {
+        self.user = controller.user
+    }
+    
+    
+}
+
 //MARK: - Menu Controller Delegate
 
 extension ContainerController : MenuControllerDelegate {
@@ -189,6 +197,7 @@ extension ContainerController : MenuControllerDelegate {
                 guard let user = self.user else {return}
                 
                 let settingVC = SettingViewController(user: user)
+                settingVC.delegate = self
                 
                 let nav = UINavigationController(rootViewController: settingVC)
                 

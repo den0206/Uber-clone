@@ -25,6 +25,7 @@
 		3AD836E323EE40AE00BB9505 /* Reference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD836E223EE40AE00BB9505 /* Reference.swift */; };
 		3AD836E523EE43A100BB9505 /* Constracts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD836E423EE43A100BB9505 /* Constracts.swift */; };
 		3AD8507623FAC4D7002D9F2C /* AddLocationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD8507523FAC4D7002D9F2C /* AddLocationController.swift */; };
+		3AD9C79A23FC218000CBBAB4 /* CircularProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD9C79923FC218000CBBAB4 /* CircularProgressView.swift */; };
 		3AF1A5CA23EE7FDA00D06F51 /* LocationInputActivationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF1A5C923EE7FDA00D06F51 /* LocationInputActivationView.swift */; };
 		3AF1A5CC23EE87C000D06F51 /* LocationInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF1A5CB23EE87C000D06F51 /* LocationInputView.swift */; };
 		3AF1A5D123EEA32500D06F51 /* LocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF1A5D023EEA32500D06F51 /* LocationCell.swift */; };
@@ -57,6 +58,7 @@
 		3AD836E223EE40AE00BB9505 /* Reference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reference.swift; sourceTree = "<group>"; };
 		3AD836E423EE43A100BB9505 /* Constracts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constracts.swift; sourceTree = "<group>"; };
 		3AD8507523FAC4D7002D9F2C /* AddLocationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLocationController.swift; sourceTree = "<group>"; };
+		3AD9C79923FC218000CBBAB4 /* CircularProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressView.swift; sourceTree = "<group>"; };
 		3AF1A5C923EE7FDA00D06F51 /* LocationInputActivationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInputActivationView.swift; sourceTree = "<group>"; };
 		3AF1A5CB23EE87C000D06F51 /* LocationInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInputView.swift; sourceTree = "<group>"; };
 		3AF1A5D023EEA32500D06F51 /* LocationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LocationCell.swift; path = "Uber=clone/View/LocationCell.swift"; sourceTree = SOURCE_ROOT; };
@@ -190,6 +192,7 @@
 				3AC682B623F2558800307AA7 /* RideActionVIew.swift */,
 				3AD30D7123F8248A00B67516 /* SidemenuHeader.swift */,
 				3AFE463C23F930E90082A5A5 /* UserInfoHeader.swift */,
+				3AD9C79923FC218000CBBAB4 /* CircularProgressView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -364,6 +367,7 @@
 				3AFE463B23F92CE50082A5A5 /* SettingsController.swift in Sources */,
 				3AD836E523EE43A100BB9505 /* Constracts.swift in Sources */,
 				3AF1A5CC23EE87C000D06F51 /* LocationInputView.swift in Sources */,
+				3AD9C79A23FC218000CBBAB4 /* CircularProgressView.swift in Sources */,
 				3AD8507623FAC4D7002D9F2C /* AddLocationController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

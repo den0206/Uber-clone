@@ -52,6 +52,8 @@ class HomeController : UIViewController {
                 configureLocationActivationView()
                 // for passanger
                 observeCurrentTrip()
+                
+                configureSavedUserLocations()
             } else {
                 // Driver
                 obserbeTrips()
@@ -89,8 +91,10 @@ class HomeController : UIViewController {
     private final let rideActionViewHeight : CGFloat = 300
     
     private var searchRersults = [MKPlacemark]()
+    private var saveLocations = [MKPlacemark]()
     private var actionButtonConfigure = ActionButtonConfioguration()
     private var route : MKRoute?
+    
     
     private let actionButton : UIButton = {
         let button = UIButton(type: .system)
@@ -110,6 +114,8 @@ class HomeController : UIViewController {
         
         enableLocationaService()
         configureUI()
+        
+        
         
         
        
@@ -353,6 +359,33 @@ class HomeController : UIViewController {
         rideActionView.delegate = self
         
     }
+    
+    func configureSavedUserLocations() {
+        
+        guard let user = user else {return}
+        // reset
+        saveLocations.removeAll()
+        
+        if let homelocation = user.homeLocation {
+            geoCodeAdressString(adress: homelocation)
+        }
+        
+        if let worlLocation = user.workLocation {
+            geoCodeAdressString(adress: worlLocation)
+        }
+    }
+    
+    func geoCodeAdressString(adress :String) {
+        let geoCorder = CLGeocoder()
+        geoCorder.geocodeAddressString(adress) { (placeMarks, error) in
+            
+            guard let clplaceMark = placeMarks?.first else {return}
+            let placeMark = MKPlacemark(placemark: clplaceMark)
+            self.saveLocations.append(placeMark)
+            self.tableView.reloadData()
+        }
+    }
+    
     
     func animateRideActionView(shoudShow : Bool, destination : MKPlacemark? =  nil, config : RidectionViewConfiguration? = nil, user : FUser? = nil) {
         
@@ -692,7 +725,7 @@ extension HomeController : UITableViewDelegate, UITableViewDataSource {
         //        return section == 0 ? 2 : 5
         
         if section == 0 {
-            return 2
+            return saveLocations.count
         }
         
         return searchRersults.count
@@ -703,6 +736,10 @@ extension HomeController : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: reuserIdentifier, for: indexPath) as! LocationCell
+        
+        if indexPath.section == 0 {
+            cell.placeMark = saveLocations[indexPath.row]
+        }
         
         if indexPath.section == 1 {
             cell.placeMark = searchRersults[indexPath.row]
@@ -715,13 +752,16 @@ extension HomeController : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         
+        if section == 0 {
+            return "Saved Locations"
+        }
         // blank not nil
         return "   "
     }
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedPlaceMark = searchRersults[indexPath.row]
+        let selectedPlaceMark = indexPath.section == 0 ? saveLocations[indexPath.row] : searchRersults[indexPath.row]
         //        var annotaions = [MKAnnotation]()
         
         self.configureActionButton(config: .dismissActionView)
