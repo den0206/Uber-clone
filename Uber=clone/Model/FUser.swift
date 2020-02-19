@@ -23,6 +23,10 @@ struct FUser {
     var homeLocation : String?
     var workLocation :String?
     
+    var firstInitial : String {
+        return String(fullname.prefix(1))
+    }
+    
     init(_uid : String , dictionary : [String : Any]) {
         self.uid = _uid
         self.fullname = dictionary[kFULLNAME] as? String ?? ""

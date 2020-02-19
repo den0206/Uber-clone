@@ -182,6 +182,18 @@ class HomeController : UIViewController {
                 
             case .requested:
                 break
+            case .denied :
+                self.shouldPresentLoadingView(false)
+                self.presentAlertController(withTitle: "oops", withMessage: "No Drive")
+                
+                // delete trip
+                PassangerService.shared.deleteTrip { (error) in
+                    self.centerMapOnUserLocation()
+                    self.inputActivationView.alpha = 1
+                    // return Show Menu
+                    self.configureActionButton(config: .showMenu)
+                    self.removeAnnotaionsandOverlays()
+                }
             case .accepted:
                 // dismiss Indicator
                 self.shouldPresentLoadingView(false)

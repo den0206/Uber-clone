@@ -21,12 +21,36 @@ class SideMenuHeader : UIView {
 //    }
 //
     private let user : FUser
+//
+//    private let profileImageView : UIImageView = {
+//        let iv = UIImageView()
+//        iv.backgroundColor = .lightGray
+//        return iv
+//    }()
+//
     
-    private let profileImageView : UIImageView = {
-        let iv = UIImageView()
-        iv.backgroundColor = .lightGray
-        return iv
+    
+    private lazy var profileImageView : UIView = {
+        let view = UIView()
+        
+        view.backgroundColor = .black
+        
+        view.addSubview(initialLabel)
+        initialLabel.centerX(InView: view)
+        initialLabel.centerY(inView: view)
+        
+        return view
     }()
+    
+    private lazy var initialLabel : UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 42)
+        label.textColor = .lightGray
+        label.text = user.firstInitial
+        return label
+    }()
+    
+    
     
     init(user : FUser, frame : CGRect) {
         self.user = user
